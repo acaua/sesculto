@@ -18,6 +18,15 @@
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
     "@cloudflare/workers-types": "^4.20250214.0",
+    "lefthook": "^1.11.0",
     "wrangler": "^3.109.1"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@biomejs/biome",
+      "esbuild",
+      "sharp",
+      "workerd"
+    ]
   }
 }
