@@ -58,7 +58,7 @@ export function ActivityCard({ activity }: ActivityCardProps) {
           </div>
         )}
         <a
-          href={activity.link}
+          href={`https://www.sescsp.org.br${activity.link}`}
           target="_blank"
           rel="noopener noreferrer"
           className="mt-2 text-blue-600 hover:underline"
