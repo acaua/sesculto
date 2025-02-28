@@ -14,6 +14,8 @@
   "dependencies": {
     "@astrojs/cloudflare": "^12.2.1",
     "@astrojs/react": "^4.2.0",
+    "@radix-ui/react-dropdown-menu": "^2.1.6",
+    "@radix-ui/react-slot": "^1.1.2",
     "@tailwindcss/vite": "^4.0.8",
     "@tanstack/query-core": "^5.66.4",
     "@tanstack/react-query": "^5.66.9",
