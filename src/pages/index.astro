@@ -1,7 +1,9 @@
 ---
-import Layout from "../layouts/Layout.astro";
+import Layout from "@/layouts/Layout.astro";
+import Activities from "@/components/Activities";
 ---
 
 <Layout>
     <p class="text-red-500">Sesculto</p>
+    <Activities client:only="react" />
 </Layout>
