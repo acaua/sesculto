@@ -37,7 +37,8 @@ interface FilterBarProps {
 }
 
 export function FilterBar({ activities, onFilterChange }: FilterBarProps) {
-  const [search, setSearch] = useState("");
+  const [searchInputValue, setSearchInputValue] = useState(""); // For immediate input feedback
+  const [search, setSearch] = useState(""); // Debounced search value for filtering
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedBranches, setSelectedBranches] = useState<string[]>([]);
 
@@ -108,6 +109,17 @@ export function FilterBar({ activities, onFilterChange }: FilterBarProps) {
     return regions;
   }, [branchesData]);
 
+  // Debounce search input
+  useEffect(() => {
+    const debounceTimeout = setTimeout(() => {
+      setSearch(searchInputValue);
+    }, 500); // 300ms debounce delay
+
+    return () => {
+      clearTimeout(debounceTimeout);
+    };
+  }, [searchInputValue]);
+
   // Update parent component with filters
   useEffect(() => {
     onFilterChange({
@@ -118,6 +130,7 @@ export function FilterBar({ activities, onFilterChange }: FilterBarProps) {
   }, [search, selectedCategories, selectedBranches, onFilterChange]);
 
   const resetFilters = () => {
+    setSearchInputValue("");
     setSearch("");
     setSelectedCategories([]);
     setSelectedBranches([]);
@@ -172,8 +185,8 @@ export function FilterBar({ activities, onFilterChange }: FilterBarProps) {
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
           <Input
             placeholder="Buscar atividades..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            value={searchInputValue}
+            onChange={(e) => setSearchInputValue(e.target.value)}
             className="pl-10"
           />
         </div>
@@ -293,7 +306,7 @@ export function FilterBar({ activities, onFilterChange }: FilterBarProps) {
               key={cat}
               className="flex items-center bg-gray-100 dark:bg-gray-800 rounded-full px-3 py-1 text-sm"
             >
-              {cat}
+              {cat.replace(/\/categorias-atividades\//, "")}
               <Button
                 onClick={() =>
                   setSelectedCategories(
