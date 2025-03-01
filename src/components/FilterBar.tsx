@@ -136,6 +136,11 @@ export function FilterBar({ activities, onFilterChange }: FilterBarProps) {
     setSelectedBranches([]);
   };
 
+  const clearSearch = () => {
+    setSearchInputValue("");
+    setSearch("");
+  };
+
   const handleRegionSelection = (regionName: string, isSelected: boolean) => {
     const region = regionOptions.find((r) => r.name === regionName);
     if (!region) return;
@@ -187,8 +192,19 @@ export function FilterBar({ activities, onFilterChange }: FilterBarProps) {
             placeholder="Buscar atividades..."
             value={searchInputValue}
             onChange={(e) => setSearchInputValue(e.target.value)}
-            className="pl-10"
+            className="pl-10 pr-10"
           />
+          {searchInputValue && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={clearSearch}
+              className="absolute right-2 top-1/2 transform -translate-y-1/2 h-7 w-7 p-0"
+            >
+              <X className="h-4 w-4 text-gray-400" />
+              <span className="sr-only">Clear search</span>
+            </Button>
+          )}
         </div>
 
         <div className="flex gap-2">
