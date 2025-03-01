@@ -1,7 +1,7 @@
 # Sesculto
 
 
-## Atividades endpoint
+## Atividades endpoint (activities)
 
 https://www.sescsp.org.br/wp-json/wp/v1/atividades/filter?ppp=5000&page=1
 
@@ -5516,6 +5516,482 @@ https://www.sescsp.org.br/wp-json/wp/v1/atividades/filter?ppp=5000&page=1
 }
 ```
 
+## Unidades endpoint (branches)
+
+https://www.sescsp.org.br/wp-json/wp/v1/dinamico?unidades=&categorias=&gratuito=&online=&modes=unidade
+
+### Response sample
+
+```json
+{
+        "capital": [
+            {
+                "groupName": "24 de Maio",
+                "groupType": "capital",
+                "groupID": "2",
+                "groupLink": "24-de-maio",
+                "doc_count": 72
+            },
+            {
+                "groupName": "Avenida Paulista",
+                "groupType": "capital",
+                "groupID": "43",
+                "groupLink": "avenida-paulista",
+                "doc_count": 78
+            },
+            {
+                "groupName": "Belenzinho",
+                "groupType": "capital",
+                "groupID": "47",
+                "groupLink": "belenzinho",
+                "doc_count": 115
+            },
+            {
+                "groupName": "Bom Retiro",
+                "groupType": "capital",
+                "groupID": "48",
+                "groupLink": "bom-retiro",
+                "doc_count": 94
+            },
+            {
+                "groupName": "Campo Limpo",
+                "groupType": "capital",
+                "groupID": "49",
+                "groupLink": "campo-limpo",
+                "doc_count": 29
+            },
+            {
+                "groupName": "Carmo",
+                "groupType": "capital",
+                "groupID": "50",
+                "groupLink": "carmo",
+                "doc_count": 31
+            },
+            {
+                "groupName": "Centro de Pesquisa e Forma\u00e7\u00e3o",
+                "groupType": "capital",
+                "groupID": "51",
+                "groupLink": "centro-de-pesquisa-e-formacao",
+                "doc_count": 57
+            },
+            {
+                "groupName": "CineSesc",
+                "groupType": "capital",
+                "groupID": "52",
+                "groupLink": "cinesesc",
+                "doc_count": 59
+            },
+            {
+                "groupName": "Consola\u00e7\u00e3o",
+                "groupType": "capital",
+                "groupID": "53",
+                "groupLink": "consolacao",
+                "doc_count": 106
+            },
+            {
+                "groupName": "Flor\u00eancio de Abreu",
+                "groupType": "capital",
+                "groupID": "54",
+                "groupLink": "florencio-de-abreu",
+                "doc_count": 20
+            },
+            {
+                "groupName": "Interlagos",
+                "groupType": "capital",
+                "groupID": "55",
+                "groupLink": "interlagos",
+                "doc_count": 50
+            },
+            {
+                "groupName": "Ipiranga",
+                "groupType": "capital",
+                "groupID": "56",
+                "groupLink": "ipiranga",
+                "doc_count": 67
+            },
+            {
+                "groupName": "Itaquera",
+                "groupType": "capital",
+                "groupID": "57",
+                "groupLink": "itaquera",
+                "doc_count": 15
+            },
+            {
+                "groupName": "Osasco",
+                "groupType": "capital",
+                "groupID": "58",
+                "groupLink": "osasco",
+                "doc_count": 16
+            },
+            {
+                "groupName": "Pinheiros",
+                "groupType": "capital",
+                "groupID": "60",
+                "groupLink": "pinheiros",
+                "doc_count": 91
+            },
+            {
+                "groupName": "Pompeia",
+                "groupType": "capital",
+                "groupID": "61",
+                "groupLink": "pompeia",
+                "doc_count": 42
+            },
+            {
+                "groupName": "Santana",
+                "groupType": "capital",
+                "groupID": "62",
+                "groupLink": "santana",
+                "doc_count": 44
+            },
+            {
+                "groupName": "Santo Amaro",
+                "groupType": "capital",
+                "groupID": "63",
+                "groupLink": "santo-amaro",
+                "doc_count": 99
+            },
+            {
+                "groupName": "Santo Andr\u00e9",
+                "groupType": "capital",
+                "groupID": "64",
+                "groupLink": "santo-andre",
+                "doc_count": 70
+            },
+            {
+                "groupName": "S\u00e3o Caetano ",
+                "groupType": "capital",
+                "groupID": "65",
+                "groupLink": "sao-caetano",
+                "doc_count": 50
+            },
+            {
+                "groupName": "Vila Mariana",
+                "groupType": "capital",
+                "groupID": "66",
+                "groupLink": "vila-mariana",
+                "doc_count": 114
+            },
+            {
+                "groupName": "Guarulhos",
+                "groupType": "capital",
+                "groupID": "71",
+                "groupLink": "guarulhos",
+                "doc_count": 140
+            },
+            {
+                "groupName": "Mogi das Cruzes",
+                "groupType": "capital",
+                "groupID": "80",
+                "groupLink": "mogi-das-cruzes",
+                "doc_count": 84
+            },
+            {
+                "groupName": "Casa Verde",
+                "groupType": "capital",
+                "groupID": "730",
+                "groupLink": "casa-verde",
+                "doc_count": 44
+            },
+            {
+                "groupName": "14 Bis",
+                "groupType": "capital",
+                "groupID": "761",
+                "groupLink": "14-bis",
+                "doc_count": 42
+            }
+        ],
+        "interior": [
+            {
+                "groupName": "Araraquara",
+                "groupType": "interior",
+                "groupID": "25",
+                "groupLink": "araraquara",
+                "doc_count": 46
+            },
+            {
+                "groupName": "Bauru",
+                "groupType": "interior",
+                "groupID": "26",
+                "groupLink": "bauru",
+                "doc_count": 52
+            },
+            {
+                "groupName": "Birigui",
+                "groupType": "interior",
+                "groupID": "28",
+                "groupLink": "birigui",
+                "doc_count": 89
+            },
+            {
+                "groupName": "Campinas",
+                "groupType": "interior",
+                "groupID": "29",
+                "groupLink": "campinas",
+                "doc_count": 102
+            },
+            {
+                "groupName": "Catanduva",
+                "groupType": "interior",
+                "groupID": "30",
+                "groupLink": "catanduva",
+                "doc_count": 66
+            },
+            {
+                "groupName": "Jundia\u00ed",
+                "groupType": "interior",
+                "groupID": "31",
+                "groupLink": "jundiai",
+                "doc_count": 108
+            },
+            {
+                "groupName": "Piracicaba",
+                "groupType": "interior",
+                "groupID": "32",
+                "groupLink": "piracicaba",
+                "doc_count": 68
+            },
+            {
+                "groupName": "Presidente Prudente",
+                "groupType": "interior",
+                "groupID": "33",
+                "groupLink": "presidente-prudente",
+                "doc_count": 46
+            },
+            {
+                "groupName": "Registro",
+                "groupType": "interior",
+                "groupID": "34",
+                "groupLink": "registro",
+                "doc_count": 53
+            },
+            {
+                "groupName": "Ribeir\u00e3o Preto",
+                "groupType": "interior",
+                "groupID": "35",
+                "groupLink": "ribeirao-preto",
+                "doc_count": 70
+            },
+            {
+                "groupName": "Rio Preto",
+                "groupType": "interior",
+                "groupID": "36",
+                "groupLink": "rio-preto",
+                "doc_count": 94
+            },
+            {
+                "groupName": "Sorocaba",
+                "groupType": "interior",
+                "groupID": "38",
+                "groupLink": "sorocaba",
+                "doc_count": 94
+            },
+            {
+                "groupName": "S\u00e3o Jos\u00e9 dos Campos",
+                "groupType": "interior",
+                "groupID": "40",
+                "groupLink": "sao-jose-dos-campos",
+                "doc_count": 55
+            },
+            {
+                "groupName": "Taubat\u00e9",
+                "groupType": "interior",
+                "groupID": "41",
+                "groupLink": "taubate",
+                "doc_count": 85
+            },
+            {
+                "groupName": "S\u00e3o Carlos",
+                "groupType": "interior",
+                "groupID": "42",
+                "groupLink": "sao-carlos",
+                "doc_count": 82
+            },
+            {
+                "groupName": "Franca",
+                "groupType": "interior",
+                "groupID": "1005",
+                "groupLink": "franca",
+                "doc_count": 62
+            }
+        ],
+        "litoral": [
+            {
+                "groupName": "Bertioga",
+                "groupType": "litoral",
+                "groupID": "27",
+                "groupLink": "bertioga",
+                "doc_count": 77
+            },
+            {
+                "groupName": "Santos",
+                "groupType": "litoral",
+                "groupID": "37",
+                "groupLink": "santos",
+                "doc_count": 69
+            }
+        ]
+    }
+}
+```
+
+## Categorias endpoint (categories)
+
+https://www.sescsp.org.br/wp-json/wp/v1/dinamico?unidades=&categorias=&gratuito=&online=&modes=categoria
+
+### Response sample
+
+```json
+[
+  {
+    "id": 257,
+    "slug": "turismo",
+    "name": "Turismo",
+    "parent": 0
+  },
+  {
+    "id": 252,
+    "slug": "tecnologias-e-artes",
+    "name": "Tecnologias e Artes",
+    "parent": 0
+  },
+  {
+    "id": 254,
+    "slug": "teatro",
+    "name": "Teatro",
+    "parent": 0
+  },
+  {
+    "id": 256,
+    "slug": "saude",
+    "name": "Sa\u00fade",
+    "parent": 0
+  },
+  {
+    "id": 649,
+    "slug": "pessoas-idosas",
+    "name": "Pessoas Idosas",
+    "parent": 0
+  },
+  {
+    "id": 215,
+    "slug": "musica",
+    "name": "M\u00fasica",
+    "parent": 0
+  },
+  {
+    "id": 646,
+    "slug": "multilinguagem",
+    "name": "Multilinguagem",
+    "parent": 0
+  },
+  {
+    "id": 255,
+    "slug": "meio-ambiente",
+    "name": "Meio Ambiente",
+    "parent": 0
+  },
+  {
+    "id": 253,
+    "slug": "literatura",
+    "name": "Literatura",
+    "parent": 0
+  },
+  {
+    "id": 598,
+    "slug": "jovens",
+    "name": "Jovens",
+    "parent": 0
+  },
+  {
+    "id": 597,
+    "slug": "intergeracoes",
+    "name": "Intergera\u00e7\u00f5es",
+    "parent": 0
+  },
+  {
+    "id": 403,
+    "slug": "gestao-cultural",
+    "name": "Gest\u00e3o Cultural",
+    "parent": 0
+  },
+  {
+    "id": 251,
+    "slug": "esportes-e-atividade-fisica",
+    "name": "Esporte e Atividade F\u00edsica",
+    "parent": 0
+  },
+  {
+    "id": 601,
+    "slug": "empresas",
+    "name": "Empresas",
+    "parent": 0
+  },
+  {
+    "id": 213,
+    "slug": "danca",
+    "name": "Dan\u00e7a",
+    "parent": 0
+  },
+  {
+    "id": 610,
+    "slug": "criancas",
+    "name": "Crian\u00e7as",
+    "parent": 0
+  },
+  {
+    "id": 211,
+    "slug": "circo",
+    "name": "Circo",
+    "parent": 0
+  },
+  {
+    "id": 219,
+    "slug": "cinema-e-video",
+    "name": "Cinema e V\u00eddeo",
+    "parent": 0
+  },
+  {
+    "id": 217,
+    "slug": "artes-visuais",
+    "name": "Artes Visuais",
+    "parent": 0
+  },
+  {
+    "id": 259,
+    "slug": "alimentacao",
+    "name": "Alimenta\u00e7\u00e3o",
+    "parent": 0
+  },
+  {
+    "id": 216,
+    "slug": "acoes-para-cidadania",
+    "name": "A\u00e7\u00f5es para Cidadania",
+    "parent": 0
+  }
+]
+```
+
+## TODO: Acessos endpoint
+
+https://www.sescsp.org.br/wp-json/wp/v1/dinamico?unidades=&categorias=&gratuito=&online=&modes=acesso
+
+### Response sample
+
+```json
+{
+        "Presencial pago": {
+            "total": 375
+        },
+        "Presencial gratuito": {
+            "total": 2316
+        },
+        "Online ao vivo": {
+            "total": 66
+        }
+    }
+}
+```
 
 ## Todo:
 - [ ] https://portal.sescsp.org.br/v2/bilheteria/atividade.action?idAtividade=233817

@@ -11,8 +11,9 @@ export interface Activity {
   quantDatas: string;
   dataProxSessao: string;
   categorias: Array<{
-    titulo: string;
     cor: string;
+    link: string;
+    titulo: string;
   }>;
   unidade: Array<{
     name: string;

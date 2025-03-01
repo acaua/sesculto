@@ -1,0 +1,30 @@
+export interface Branch {
+  groupName: string;
+  groupType: string;
+  groupID: string;
+  groupLink: string;
+  doc_count: number;
+}
+
+export interface BranchesByRegion {
+  capital: Branch[];
+  interior: Branch[];
+  litoral: Branch[];
+}
+
+interface ApiResponse {
+  unidades: BranchesByRegion;
+}
+
+export const fetchBranches = async (): Promise<BranchesByRegion> => {
+  const response = await fetch(
+    "https://www.sescsp.org.br/wp-json/wp/v1/dinamico?unidades=&categorias=&gratuito=&online=&modes=unidade",
+  );
+  if (!response.ok) {
+    throw new Error("Failed to fetch branches");
+  }
+
+  const jsonResponse: ApiResponse = await response.json();
+
+  return jsonResponse.unidades;
+};

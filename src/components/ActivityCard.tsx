@@ -32,11 +32,11 @@ export function ActivityCard({ activity }: ActivityCardProps) {
         <div className="flex flex-wrap gap-1 mt-2">
           {activity.categorias.map((categoria) => (
             <Badge
-              key={categoria.titulo}
+              key={categoria.link}
               style={{ backgroundColor: categoria.cor }}
               className="text-white"
             >
-              {categoria.titulo}
+              {categoria.link.replace(/\/categorias-atividades\//, "")}
             </Badge>
           ))}
         </div>

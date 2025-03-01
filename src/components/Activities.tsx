@@ -4,12 +4,15 @@ import { Loader2 } from "lucide-react";
 
 import queryClient from "@/lib/queryClient";
 import { fetchActivities } from "@/api/activities";
-import type { Activity } from "@/api/activities";
 import { ActivityCard } from "@/components/ActivityCard";
 import { FilterBar } from "@/components/FilterBar";
 
 export default function Activities() {
-  const { data, isPending, isError } = useQuery(
+  const {
+    data: activities,
+    isPending,
+    isError,
+  } = useQuery(
     {
       queryKey: ["activities"],
       queryFn: fetchActivities,
@@ -19,14 +22,14 @@ export default function Activities() {
 
   const [filters, setFilters] = useState({
     search: "",
-    categorias: [] as string[],
-    unidades: [] as string[],
+    categories: [] as string[],
+    branches: [] as string[],
   });
 
   const filteredActivities = useMemo(() => {
-    if (!data) return [];
+    if (!activities) return [];
 
-    return data.filter((activity) => {
+    return activities.filter((activity) => {
       // Filter by search
       const matchesSearch =
         !filters.search ||
@@ -37,19 +40,19 @@ export default function Activities() {
 
       // Filter by categories
       const matchesCategories =
-        filters.categorias.length === 0 ||
+        filters.categories.length === 0 ||
         activity.categorias.some((cat) =>
-          filters.categorias.includes(cat.titulo),
+          filters.categories.includes(cat.link),
         );
 
       // Filter by locations
       const matchesUnidades =
-        filters.unidades.length === 0 ||
-        activity.unidade.some((uni) => filters.unidades.includes(uni.name));
+        filters.branches.length === 0 ||
+        activity.unidade.some((uni) => filters.branches.includes(uni.name));
 
       return matchesSearch && matchesCategories && matchesUnidades;
     });
-  }, [data, filters]);
+  }, [activities, filters]);
 
   if (isPending) {
     return (
@@ -70,7 +73,7 @@ export default function Activities() {
 
   return (
     <div>
-      <FilterBar activities={data} onFilterChange={setFilters} />
+      <FilterBar activities={activities} onFilterChange={setFilters} />
 
       {filteredActivities.length === 0 ? (
         <div className="text-center py-12">

@@ -1,6 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { ChevronDown, Search, X } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 
+import queryClient from "@/lib/queryClient";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -8,8 +10,11 @@ import {
   DropdownMenuContent,
   DropdownMenuCheckboxItem,
   DropdownMenuTrigger,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import type { Activity } from "@/api/activities";
+import { fetchBranches, type Branch } from "@/api/branches";
 
 interface FilterOption {
   value: string;
@@ -17,65 +22,148 @@ interface FilterOption {
   color?: string;
 }
 
+interface RegionOption {
+  name: string;
+  branches: FilterOption[];
+}
+
 interface FilterBarProps {
   activities: Activity[];
   onFilterChange: (filters: {
     search: string;
-    categorias: string[];
-    unidades: string[];
+    categories: string[];
+    branches: string[];
   }) => void;
 }
 
 export function FilterBar({ activities, onFilterChange }: FilterBarProps) {
   const [search, setSearch] = useState("");
-  const [selectedCategorias, setSelectedCategorias] = useState<string[]>([]);
-  const [selectedUnidades, setSelectedUnidades] = useState<string[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedBranches, setSelectedBranches] = useState<string[]>([]);
 
-  // Extract unique categories and locations from activities
-  const categorias: FilterOption[] = [];
-  const unidades: FilterOption[] = [];
+  // Fetch branches using React Query
+  const { data: branchesData } = useQuery(
+    {
+      queryKey: ["branches"],
+      queryFn: fetchBranches,
+    },
+    queryClient,
+  );
 
-  for (const activity of activities) {
-    for (const cat of activity.categorias) {
-      if (!categorias.some((c) => c.value === cat.titulo)) {
-        categorias.push({
-          value: cat.titulo,
-          label: cat.titulo,
-          color: cat.cor,
-        });
+  // Extract unique categories from activities and memoize
+  const categories = useMemo<FilterOption[]>(() => {
+    const uniqueCategories: FilterOption[] = [];
+
+    for (const activity of activities) {
+      for (const cat of activity.categorias) {
+        if (!uniqueCategories.some((c) => c.value === cat.link)) {
+          uniqueCategories.push({
+            value: cat.link,
+            label: cat.link.replace(/\/categorias-atividades\//, ""),
+            color: cat.cor,
+          });
+        }
       }
     }
 
-    for (const uni of activity.unidade) {
-      if (!unidades.some((u) => u.value === uni.name)) {
-        unidades.push({
-          value: uni.name,
-          label: uni.name,
-        });
-      }
+    // Sort alphabetically
+    return uniqueCategories.sort((a, b) => a.label.localeCompare(b.label));
+  }, [activities]);
+
+  // Transform branchesData to RegionOption
+  const regionOptions = useMemo<RegionOption[]>(() => {
+    if (!branchesData) return [];
+
+    const transformBranches = (branches: Branch[]): FilterOption[] =>
+      branches
+        .map((branch) => ({
+          value: branch.groupName,
+          label: branch.groupName,
+        }))
+        .sort((a, b) => a.label.localeCompare(b.label));
+
+    const regions: RegionOption[] = [];
+
+    if (branchesData.capital.length > 0) {
+      regions.push({
+        name: "Capital",
+        branches: transformBranches(branchesData.capital),
+      });
     }
-  }
 
-  // Sort alphabetically
-  categorias.sort((a, b) => a.label?.localeCompare(b.label));
-  unidades.sort((a, b) => a.label?.localeCompare(b.label));
+    if (branchesData.interior.length > 0) {
+      regions.push({
+        name: "Interior",
+        branches: transformBranches(branchesData.interior),
+      });
+    }
 
+    if (branchesData.litoral.length > 0) {
+      regions.push({
+        name: "Litoral",
+        branches: transformBranches(branchesData.litoral),
+      });
+    }
+
+    return regions;
+  }, [branchesData]);
+
+  // Update parent component with filters
   useEffect(() => {
     onFilterChange({
       search,
-      categorias: selectedCategorias,
-      unidades: selectedUnidades,
+      categories: selectedCategories,
+      branches: selectedBranches,
     });
-  }, [search, selectedCategorias, selectedUnidades, onFilterChange]);
+  }, [search, selectedCategories, selectedBranches, onFilterChange]);
 
   const resetFilters = () => {
     setSearch("");
-    setSelectedCategorias([]);
-    setSelectedUnidades([]);
+    setSelectedCategories([]);
+    setSelectedBranches([]);
+  };
+
+  const handleRegionSelection = (regionName: string, isSelected: boolean) => {
+    const region = regionOptions.find((r) => r.name === regionName);
+    if (!region) return;
+
+    const branchValues = region.branches.map((b) => b.value);
+
+    if (isSelected) {
+      // Add all branches of the region that aren't already selected
+      setSelectedBranches([
+        ...selectedBranches,
+        ...branchValues.filter((b) => !selectedBranches.includes(b)),
+      ]);
+    } else {
+      // Remove all branches of the region
+      setSelectedBranches(
+        selectedBranches.filter((b) => !branchValues.includes(b)),
+      );
+    }
+  };
+
+  const isRegionSelected = (regionName: string): boolean => {
+    const region = regionOptions.find((r) => r.name === regionName);
+    if (!region) return false;
+
+    const regionBranchValues = region.branches.map((b) => b.value);
+    return regionBranchValues.every((b) => selectedBranches.includes(b));
+  };
+
+  const isRegionPartiallySelected = (regionName: string): boolean => {
+    const region = regionOptions.find((r) => r.name === regionName);
+    if (!region) return false;
+
+    const regionBranchValues = region.branches.map((b) => b.value);
+    return (
+      regionBranchValues.some((b) => selectedBranches.includes(b)) &&
+      !regionBranchValues.every((b) => selectedBranches.includes(b))
+    );
   };
 
   const hasFilters =
-    search || selectedCategorias.length > 0 || selectedUnidades.length > 0;
+    search || selectedCategories.length > 0 || selectedBranches.length > 0;
 
   return (
     <div className="sticky top-0 z-10 bg-white dark:bg-gray-950 py-4 border-b mb-6">
@@ -98,31 +186,33 @@ export function FilterBar({ activities, onFilterChange }: FilterBarProps) {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56 max-h-80 overflow-auto">
-              {categorias.map((categoria) => (
+              {categories.map((category) => (
                 <DropdownMenuCheckboxItem
-                  key={categoria.value}
-                  checked={selectedCategorias.includes(categoria.value)}
+                  key={category.value}
+                  checked={selectedCategories.includes(category.value)}
                   onCheckedChange={(checked) => {
                     if (checked) {
-                      setSelectedCategorias([
-                        ...selectedCategorias,
-                        categoria.value,
+                      setSelectedCategories([
+                        ...selectedCategories,
+                        category.value,
                       ]);
                     } else {
-                      setSelectedCategorias(
-                        selectedCategorias.filter((c) => c !== categoria.value),
+                      setSelectedCategories(
+                        selectedCategories.filter((c) => c !== category.value),
                       );
                     }
                   }}
                 >
                   <div className="flex items-center">
-                    {categoria.color && (
-                      <div
-                        className="w-3 h-3 rounded-full mr-2"
-                        style={{ backgroundColor: categoria.color }}
-                      />
-                    )}
-                    {categoria.label}
+                    <div
+                      className="w-3 h-3 rounded-full mr-2 bg-gray-600"
+                      style={
+                        category.color
+                          ? { backgroundColor: category.color }
+                          : {}
+                      }
+                    />
+                    {category.label}
                   </div>
                 </DropdownMenuCheckboxItem>
               ))}
@@ -136,22 +226,48 @@ export function FilterBar({ activities, onFilterChange }: FilterBarProps) {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56 max-h-80 overflow-auto">
-              {unidades.map((unidade) => (
-                <DropdownMenuCheckboxItem
-                  key={unidade.value}
-                  checked={selectedUnidades.includes(unidade.value)}
-                  onCheckedChange={(checked) => {
-                    if (checked) {
-                      setSelectedUnidades([...selectedUnidades, unidade.value]);
-                    } else {
-                      setSelectedUnidades(
-                        selectedUnidades.filter((u) => u !== unidade.value),
-                      );
-                    }
-                  }}
-                >
-                  {unidade.label}
-                </DropdownMenuCheckboxItem>
+              {regionOptions.map((region) => (
+                <div key={region.name}>
+                  <DropdownMenuLabel className="font-bold">
+                    <DropdownMenuCheckboxItem
+                      checked={isRegionSelected(region.name)}
+                      onCheckedChange={(checked) => {
+                        handleRegionSelection(region.name, checked);
+                      }}
+                      className={
+                        isRegionPartiallySelected(region.name)
+                          ? "bg-gray-100 dark:bg-gray-800"
+                          : ""
+                      }
+                    >
+                      {region.name}
+                    </DropdownMenuCheckboxItem>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  {region.branches.map((branch) => (
+                    <DropdownMenuCheckboxItem
+                      key={branch.value}
+                      checked={selectedBranches.includes(branch.value)}
+                      onCheckedChange={(checked) => {
+                        if (checked) {
+                          setSelectedBranches([
+                            ...selectedBranches,
+                            branch.value,
+                          ]);
+                        } else {
+                          setSelectedBranches(
+                            selectedBranches.filter((b) => b !== branch.value),
+                          );
+                        }
+                      }}
+                    >
+                      {branch.label}
+                    </DropdownMenuCheckboxItem>
+                  ))}
+                  {region !== regionOptions[regionOptions.length - 1] && (
+                    <DropdownMenuSeparator />
+                  )}
+                </div>
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
@@ -172,7 +288,7 @@ export function FilterBar({ activities, onFilterChange }: FilterBarProps) {
       {/* Show selected filters as pills */}
       {hasFilters && (
         <div className="flex flex-wrap gap-2 mt-3">
-          {selectedCategorias.map((cat) => (
+          {selectedCategories.map((cat) => (
             <div
               key={cat}
               className="flex items-center bg-gray-100 dark:bg-gray-800 rounded-full px-3 py-1 text-sm"
@@ -180,8 +296,8 @@ export function FilterBar({ activities, onFilterChange }: FilterBarProps) {
               {cat}
               <Button
                 onClick={() =>
-                  setSelectedCategorias(
-                    selectedCategorias.filter((c) => c !== cat),
+                  setSelectedCategories(
+                    selectedCategories.filter((c) => c !== cat),
                   )
                 }
                 variant="ghost"
@@ -193,15 +309,17 @@ export function FilterBar({ activities, onFilterChange }: FilterBarProps) {
               </Button>
             </div>
           ))}
-          {selectedUnidades.map((uni) => (
+          {selectedBranches.map((branch) => (
             <div
-              key={uni}
+              key={branch}
               className="flex items-center bg-gray-100 dark:bg-gray-800 rounded-full px-3 py-1 text-sm"
             >
-              {uni}
+              {branch}
               <Button
                 onClick={() =>
-                  setSelectedUnidades(selectedUnidades.filter((u) => u !== uni))
+                  setSelectedBranches(
+                    selectedBranches.filter((b) => b !== branch),
+                  )
                 }
                 variant="ghost"
                 size="sm"
