@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
+import Fuse from "fuse.js";
 
 import queryClient from "@/lib/queryClient";
 import { fetchActivities } from "@/api/activities";
@@ -26,18 +27,33 @@ export default function Activities() {
     branches: [] as string[],
   });
 
+  // Configure Fuse instance for fuzzy searching
+  const fuseInstance = useMemo(() => {
+    if (!activities) return null;
+
+    return new Fuse(activities, {
+      keys: ["titulo", "complemento"],
+      threshold: 0.4, // Lower threshold = stricter matching
+      ignoreLocation: true,
+      useExtendedSearch: true,
+    });
+  }, [activities]);
+
   const filteredActivities = useMemo(() => {
     if (!activities) return [];
 
-    return activities.filter((activity) => {
-      // Filter by search
-      const matchesSearch =
-        !filters.search ||
-        activity.titulo.toLowerCase().includes(filters.search.toLowerCase()) ||
-        activity.complemento
-          .toLowerCase()
-          .includes(filters.search.toLowerCase());
+    // First apply fuzzy search if search term exists
+    let searchResults = activities;
+    if (filters.search && fuseInstance) {
+      searchResults = fuseInstance
+        .search(filters.search)
+        .map((result) => result.item);
+    } else if (!filters.search) {
+      searchResults = activities;
+    }
 
+    // Then apply category and branch filters
+    return searchResults.filter((activity) => {
       // Filter by categories
       const matchesCategories =
         filters.categories.length === 0 ||
@@ -50,9 +66,9 @@ export default function Activities() {
         filters.branches.length === 0 ||
         activity.unidade.some((uni) => filters.branches.includes(uni.name));
 
-      return matchesSearch && matchesCategories && matchesUnidades;
+      return matchesCategories && matchesUnidades;
     });
-  }, [activities, filters]);
+  }, [activities, filters, fuseInstance]);
 
   if (isPending) {
     return (
