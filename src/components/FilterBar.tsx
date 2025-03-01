@@ -8,6 +8,7 @@ import {
 import { ChevronDown, Search, X, Command } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 
+import type { FilterState } from "@/hooks/useActivitiesFiltering";
 import queryClient from "@/lib/queryClient";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -36,11 +37,7 @@ interface RegionOption {
 
 interface FilterBarProps {
   activities: Activity[];
-  onFilterChange: (filters: {
-    search: string;
-    categories: string[];
-    branches: string[];
-  }) => void;
+  onFilterChange: (filters: FilterState) => void;
 }
 
 export function FilterBar({ activities, onFilterChange }: FilterBarProps) {
