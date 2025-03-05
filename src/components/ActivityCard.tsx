@@ -7,20 +7,24 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import type { Activity } from "@/api/activities";
+import { type Activity, getActivityImage } from "@/api/activities";
 
 interface ActivityCardProps {
   activity: Activity;
 }
 
 export function ActivityCard({ activity }: ActivityCardProps) {
+  const image = getActivityImage(activity);
+
   return (
     <Card className="h-full flex flex-col overflow-hidden transition-all hover:shadow-lg">
       <div className="aspect-video overflow-hidden">
         {activity.imagem && (
           <img
-            src={activity.imagem}
+            src={image.url}
             alt={activity.titulo}
+            width={image.width}
+            height={image.height}
             className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
           />
         )}
