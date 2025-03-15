@@ -14,47 +14,40 @@ export function ActivityCard({ activity }: ActivityCardProps) {
       target="_blank"
       rel="noopener noreferrer"
     >
-      <div className="overflow-hidden h-[420px] bg-card flex flex-col rounded-xl border shadow-sm transition-shadow hover:shadow-lg">
+      <div className="overflow-hidden bg-card flex flex-col rounded-xl border shadow-sm transition-shadow hover:shadow-lg">
         <img
           src={image.url}
           alt={activity.titulo}
           width={image.width}
           height={image.height}
-          className="w-full hover:scale-105 transition-transform duration-300"
+          className="w-full"
+          loading="lazy"
         />
-        <div className="flex flex-col justify-between h-full gap-5 p-6">
-          <div className="flex flex-col gap-4">
-            <div>
-              <h1 className="leading-none font-semibold text-lg line-clamp-2 mb-2">
-                {activity.titulo}
-              </h1>
-              <p className="text-muted-foreground text-sm line-clamp-2">
-                {activity.complemento}
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {activity.categorias.map((categoria) => (
-                <Badge
-                  key={categoria.link}
-                  style={{ backgroundColor: categoria.cor }}
-                  className="text-white"
-                >
-                  {categoria.link.replace(/\/categorias-atividades\//, "")}
-                </Badge>
-              ))}
-            </div>
+        <div className="flex flex-col h-full gap-4 p-5 pt-4">
+          <div className="flex flex-col gap-1">
+            <h1 className="h-14 font-semibold text-lg line-clamp-2">
+              {activity.titulo}
+            </h1>
+            <p className="h-10 text-muted-foreground text-sm line-clamp-2">
+              {activity.complemento}
+            </p>
           </div>
-          <div>
-            <div className="flex items-center gap-1">
-              <span className="font-medium">Local:</span>
+          <div className="flex flex-col gap-1">
+            <p className="font-semibold">
               {activity.unidade.map((u) => u.name).join(", ")}
-            </div>
-            {activity.dataProxSessao && (
-              <div className="flex items-center gap-1">
-                <span className="font-medium">Próxima sessão:</span>
-                {new Date(activity.dataProxSessao).toLocaleDateString("pt-BR")}
-              </div>
-            )}
+            </p>
+            <p className="font-mono text-sm">
+              {new Date(activity.dataPrimeiraSessao).toLocaleDateString(
+                "pt-BR",
+                { year: "2-digit", month: "2-digit", day: "2-digit" },
+              )}
+              {activity.dataPrimeiraSessao !== activity.dataUltimaSessao
+                ? ` a ${new Date(activity.dataUltimaSessao).toLocaleDateString(
+                    "pt-BR",
+                    { year: "2-digit", month: "2-digit", day: "2-digit" },
+                  )}`
+                : ""}
+            </p>
           </div>
         </div>
       </div>
