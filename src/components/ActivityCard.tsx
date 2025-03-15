@@ -14,7 +14,7 @@ export function ActivityCard({ activity }: ActivityCardProps) {
       target="_blank"
       rel="noopener noreferrer"
     >
-      <div className="overflow-hidden bg-card flex flex-col rounded-xl border shadow-sm transition-shadow hover:shadow-lg">
+      <article className="overflow-hidden bg-card flex flex-col rounded-xl border shadow-sm transition-shadow hover:shadow-lg">
         <img
           src={image.url}
           alt={activity.titulo}
@@ -50,7 +50,7 @@ export function ActivityCard({ activity }: ActivityCardProps) {
             </p>
           </div>
         </div>
-      </div>
+      </article>
     </a>
   );
 }
