@@ -6,10 +6,10 @@ import {
   type KeyboardEvent,
 } from "react";
 import { ChevronDown, Search, X, Command } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
 
 import type { FilterState } from "@/hooks/useActivitiesFiltering";
-import queryClient from "@/lib/queryClient";
+import { useBranches } from "@/hooks/useBranches";
+import type { Activity } from "@/api/activities";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,19 +20,12 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import type { Activity } from "@/api/activities";
-import { fetchBranches, type Branch } from "@/api/branches";
 
 interface FilterOption {
   value: string;
   label: string;
   color?: string;
   type: "category" | "branch";
-}
-
-interface RegionOption {
-  name: string;
-  branches: Omit<FilterOption, "type">[];
 }
 
 interface FilterBarProps {
@@ -51,14 +44,7 @@ export function FilterBar({ activities, onFilterChange }: FilterBarProps) {
   const searchInputRef = useRef<HTMLInputElement>(null);
   const autocompleteRef = useRef<HTMLDivElement>(null);
 
-  // Fetch branches using React Query
-  const { data: branchesData } = useQuery(
-    {
-      queryKey: ["branches"],
-      queryFn: fetchBranches,
-    },
-    queryClient,
-  );
+  const { regionOptions, allBranches } = useBranches();
 
   // Extract unique categories from activities and memoize
   const categories = useMemo<Omit<FilterOption, "type">[]>(() => {
@@ -79,51 +65,6 @@ export function FilterBar({ activities, onFilterChange }: FilterBarProps) {
     // Sort alphabetically
     return uniqueCategories.sort((a, b) => a.label.localeCompare(b.label));
   }, [activities]);
-
-  // Transform branchesData to RegionOption
-  const regionOptions = useMemo<RegionOption[]>(() => {
-    if (!branchesData) return [];
-
-    const transformBranches = (
-      branches: Branch[],
-    ): Omit<FilterOption, "type">[] =>
-      branches
-        .map((branch) => ({
-          value: branch.groupName,
-          label: branch.groupName,
-        }))
-        .sort((a, b) => a.label.localeCompare(b.label));
-
-    const regions: RegionOption[] = [];
-
-    if (branchesData.capital.length > 0) {
-      regions.push({
-        name: "Capital",
-        branches: transformBranches(branchesData.capital),
-      });
-    }
-
-    if (branchesData.interior.length > 0) {
-      regions.push({
-        name: "Interior",
-        branches: transformBranches(branchesData.interior),
-      });
-    }
-
-    if (branchesData.litoral.length > 0) {
-      regions.push({
-        name: "Litoral",
-        branches: transformBranches(branchesData.litoral),
-      });
-    }
-
-    return regions;
-  }, [branchesData]);
-
-  // All branches flattened into a single array for autocomplete
-  const allBranches = useMemo(() => {
-    return regionOptions.flatMap((region) => region.branches);
-  }, [regionOptions]);
 
   // Filtered autocomplete suggestions
   const autocompleteSuggestions = useMemo(() => {

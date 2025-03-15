@@ -6,10 +6,16 @@ export interface Branch {
   doc_count: number;
 }
 
+export enum Region {
+  CAPITAL = "capital",
+  INTERIOR = "interior",
+  LITORAL = "litoral",
+}
+
 export interface BranchesByRegion {
-  capital: Branch[];
-  interior: Branch[];
-  litoral: Branch[];
+  [Region.CAPITAL]: Branch[];
+  [Region.INTERIOR]: Branch[];
+  [Region.LITORAL]: Branch[];
 }
 
 interface ApiResponse {
