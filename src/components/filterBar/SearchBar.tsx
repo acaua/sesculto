@@ -17,6 +17,7 @@ interface SearchBarProps {
   categories: Omit<FilterOption, "type">[];
   allBranches: { value: string; label: string }[];
   onAutocompleteSelection: (item: FilterOption) => void;
+  onEnterPress: () => void;
 }
 
 export function SearchBar({
@@ -25,6 +26,7 @@ export function SearchBar({
   categories,
   allBranches,
   onAutocompleteSelection,
+  onEnterPress,
 }: SearchBarProps) {
   const [showCommandK, setShowCommandK] = useState(true);
   const [open, setOpen] = useState(false);
@@ -110,6 +112,18 @@ export function SearchBar({
     setOpen(false);
   };
 
+  // Handle "Enter" key press in the search bar itself (not in the command menu)
+  const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      onEnterPress();
+      setOpen(false);
+    } else if (e.key === "Escape") {
+      e.preventDefault();
+      inputRef.current?.blur();
+    }
+  };
+
   return (
     <div className="relative flex-grow">
       <div className="relative">
@@ -131,6 +145,7 @@ export function SearchBar({
               setShowCommandK(true);
             }
           }}
+          onKeyDown={handleInputKeyDown}
         />
 
         {showCommandK && (

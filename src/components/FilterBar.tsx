@@ -39,6 +39,7 @@ export function FilterBar({ activities, onFilterChange }: FilterBarProps) {
     handleAutocompleteSelection,
     handleRemoveCategory,
     handleRemoveBranch,
+    handleImmediateSearch,
   } = useFilterBarState({
     activities,
     onFilterChange,
@@ -54,6 +55,7 @@ export function FilterBar({ activities, onFilterChange }: FilterBarProps) {
           categories={categories}
           allBranches={allBranches}
           onAutocompleteSelection={handleAutocompleteSelection}
+          onEnterPress={handleImmediateSearch}
         />
 
         {/* Categories and Branches dropdown filters */}

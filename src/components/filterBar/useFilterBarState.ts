@@ -108,6 +108,14 @@ export function useFilterBarState({
     setSelectedBranches((prev) => prev.filter((b) => b !== branch));
   }, []);
 
+  const handleImmediateSearch = useCallback(() => {
+    onFilterChange({
+      search: searchInputValue,
+      categories: selectedCategories,
+      branches: selectedBranches,
+    });
+  }, [searchInputValue, selectedCategories, selectedBranches, onFilterChange]);
+
   return {
     // State and derived data
     searchInputValue,
@@ -127,5 +135,6 @@ export function useFilterBarState({
     handleAutocompleteSelection,
     handleRemoveCategory,
     handleRemoveBranch,
+    handleImmediateSearch,
   };
 }
