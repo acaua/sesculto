@@ -1,15 +1,14 @@
-import { useState, useEffect, useMemo } from "react";
 import { X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import type { Activity } from "@/api/activities";
-import { extractUniqueCategories, type CategoryOption } from "@/api/categories";
 import type { FilterState } from "@/hooks/useActivitiesFiltering";
-import { useBranches } from "@/hooks/useBranches";
+
 import { SearchBar } from "@/components/filterBar/SearchBar";
 import { CategoriesFilter } from "@/components/filterBar/CategoriesFilter";
 import { BranchesFilter } from "@/components/filterBar/BranchesFilter";
 import { SelectedFilters } from "@/components/filterBar/SelectedFilters";
+import { useFilterBarState } from "@/components/filterBar/useFilterBarState";
 
 export interface FilterOption {
   value: string;
@@ -24,81 +23,26 @@ interface FilterBarProps {
 }
 
 export function FilterBar({ activities, onFilterChange }: FilterBarProps) {
-  const [searchInputValue, setSearchInputValue] = useState(""); // For immediate input feedback
-  const [search, setSearch] = useState(""); // Debounced search value for filtering
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [selectedBranches, setSelectedBranches] = useState<string[]>([]);
-
-  const { regionOptions, allBranches } = useBranches();
-
-  // Extract unique categories from activities and memoize
-  const categories = useMemo<CategoryOption[]>(
-    () => extractUniqueCategories(activities),
-    [activities],
-  );
-
-  // Debounce search input
-  useEffect(() => {
-    const debounceTimeout = setTimeout(() => {
-      setSearch(searchInputValue);
-    }, 500); // 500ms debounce delay
-
-    return () => {
-      clearTimeout(debounceTimeout);
-    };
-  }, [searchInputValue]);
-
-  // Update parent component with filters
-  useEffect(() => {
-    onFilterChange({
-      search,
-      categories: selectedCategories,
-      branches: selectedBranches,
-    });
-  }, [search, selectedCategories, selectedBranches, onFilterChange]);
-
-  const resetFilters = () => {
-    setSearchInputValue("");
-    setSearch("");
-    setSelectedCategories([]);
-    setSelectedBranches([]);
-  };
-
-  const handleRegionSelection = (regionName: string, isSelected: boolean) => {
-    const region = regionOptions.find((r) => r.name === regionName);
-    if (!region) return;
-
-    const branchValues = region.branches.map((b) => b.value);
-
-    if (isSelected) {
-      // Add all branches of the region that aren't already selected
-      setSelectedBranches([
-        ...selectedBranches,
-        ...branchValues.filter((b) => !selectedBranches.includes(b)),
-      ]);
-    } else {
-      // Remove all branches of the region
-      setSelectedBranches(
-        selectedBranches.filter((b) => !branchValues.includes(b)),
-      );
-    }
-  };
-
-  const handleAutocompleteSelection = (item: FilterOption) => {
-    if (item.type === "category") {
-      if (!selectedCategories.includes(item.value)) {
-        setSelectedCategories([...selectedCategories, item.value]);
-      }
-    } else {
-      if (!selectedBranches.includes(item.value)) {
-        setSelectedBranches([...selectedBranches, item.value]);
-      }
-    }
-    setSearchInputValue("");
-  };
-
-  const hasFilters =
-    !!search || selectedCategories.length > 0 || selectedBranches.length > 0;
+  const {
+    searchInputValue,
+    setSearchInputValue,
+    categories,
+    selectedCategories,
+    setSelectedCategories,
+    selectedBranches,
+    setSelectedBranches,
+    hasFilters,
+    regionOptions,
+    allBranches,
+    resetFilters,
+    handleRegionSelection,
+    handleAutocompleteSelection,
+    handleRemoveCategory,
+    handleRemoveBranch,
+  } = useFilterBarState({
+    activities,
+    onFilterChange,
+  });
 
   return (
     <div className="sticky top-0 z-10 bg-white dark:bg-gray-950 py-4 border-b mb-6">
@@ -144,12 +88,8 @@ export function FilterBar({ activities, onFilterChange }: FilterBarProps) {
       <SelectedFilters
         selectedCategories={selectedCategories}
         selectedBranches={selectedBranches}
-        onRemoveCategory={(cat) =>
-          setSelectedCategories(selectedCategories.filter((c) => c !== cat))
-        }
-        onRemoveBranch={(branch) =>
-          setSelectedBranches(selectedBranches.filter((b) => b !== branch))
-        }
+        onRemoveCategory={handleRemoveCategory}
+        onRemoveBranch={handleRemoveBranch}
       />
     </div>
   );
