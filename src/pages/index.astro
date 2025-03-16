@@ -1,4 +1,6 @@
 ---
+import { Loader2 } from "lucide-react";
+
 import Layout from "@/layouts/Layout.astro";
 import Activities from "@/components/Activities";
 ---
@@ -6,6 +8,11 @@ import Activities from "@/components/Activities";
 <Layout>
     <main class="container mx-auto px-4 py-8">
         <h1 class="text-3xl font-bold mb-4">Sesculto</h1>
-        <Activities client:only="react" />
+        <Activities client:only="react">
+            <div slot="fallback" class="flex justify-center items-center h-64">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              <span class="ml-2">Carregando...</span>
+            </div>
+        </Activities>
     </main>
 </Layout>
