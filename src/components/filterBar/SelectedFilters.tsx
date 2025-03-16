@@ -1,6 +1,7 @@
 import { X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { getCategoryLabel } from "@/api/categories";
 
 interface SelectedFiltersProps {
   selectedCategories: string[];
@@ -22,7 +23,7 @@ export function SelectedFilters({
           key={cat}
           className="flex items-center bg-gray-100 dark:bg-gray-800 rounded-full px-3 py-1 text-sm"
         >
-          {cat.replace(/\/categorias-atividades\//, "")}
+          {getCategoryLabel(cat)}
           <Button
             onClick={() => onRemoveCategory(cat)}
             variant="ghost"

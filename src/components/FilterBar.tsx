@@ -3,6 +3,7 @@ import { X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import type { Activity } from "@/api/activities";
+import { extractUniqueCategories, type CategoryOption } from "@/api/categories";
 import type { FilterState } from "@/hooks/useActivitiesFiltering";
 import { useBranches } from "@/hooks/useBranches";
 import { SearchBar } from "@/components/filterBar/SearchBar";
@@ -31,24 +32,10 @@ export function FilterBar({ activities, onFilterChange }: FilterBarProps) {
   const { regionOptions, allBranches } = useBranches();
 
   // Extract unique categories from activities and memoize
-  const categories = useMemo<Omit<FilterOption, "type">[]>(() => {
-    const uniqueCategories: Omit<FilterOption, "type">[] = [];
-
-    for (const activity of activities) {
-      for (const cat of activity.categorias) {
-        if (!uniqueCategories.some((c) => c.value === cat.link)) {
-          uniqueCategories.push({
-            value: cat.link,
-            label: cat.link.replace(/\/categorias-atividades\//, ""),
-            color: cat.cor,
-          });
-        }
-      }
-    }
-
-    // Sort alphabetically
-    return uniqueCategories.sort((a, b) => a.label.localeCompare(b.label));
-  }, [activities]);
+  const categories = useMemo<CategoryOption[]>(
+    () => extractUniqueCategories(activities),
+    [activities],
+  );
 
   // Debounce search input
   useEffect(() => {
@@ -154,18 +141,16 @@ export function FilterBar({ activities, onFilterChange }: FilterBarProps) {
       </div>
 
       {/* Show selected filters as pills */}
-      {hasFilters && (
-        <SelectedFilters
-          selectedCategories={selectedCategories}
-          selectedBranches={selectedBranches}
-          onRemoveCategory={(cat) =>
-            setSelectedCategories(selectedCategories.filter((c) => c !== cat))
-          }
-          onRemoveBranch={(branch) =>
-            setSelectedBranches(selectedBranches.filter((b) => b !== branch))
-          }
-        />
-      )}
+      <SelectedFilters
+        selectedCategories={selectedCategories}
+        selectedBranches={selectedBranches}
+        onRemoveCategory={(cat) =>
+          setSelectedCategories(selectedCategories.filter((c) => c !== cat))
+        }
+        onRemoveBranch={(branch) =>
+          setSelectedBranches(selectedBranches.filter((b) => b !== branch))
+        }
+      />
     </div>
   );
 }
