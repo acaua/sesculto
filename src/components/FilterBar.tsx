@@ -97,25 +97,6 @@ export function FilterBar({ activities, onFilterChange }: FilterBarProps) {
     }
   };
 
-  const isRegionSelected = (regionName: string): boolean => {
-    const region = regionOptions.find((r) => r.name === regionName);
-    if (!region) return false;
-
-    const regionBranchValues = region.branches.map((b) => b.value);
-    return regionBranchValues.every((b) => selectedBranches.includes(b));
-  };
-
-  const isRegionPartiallySelected = (regionName: string): boolean => {
-    const region = regionOptions.find((r) => r.name === regionName);
-    if (!region) return false;
-
-    const regionBranchValues = region.branches.map((b) => b.value);
-    return (
-      regionBranchValues.some((b) => selectedBranches.includes(b)) &&
-      !regionBranchValues.every((b) => selectedBranches.includes(b))
-    );
-  };
-
   const handleAutocompleteSelection = (item: FilterOption) => {
     if (item.type === "category") {
       if (!selectedCategories.includes(item.value)) {
@@ -156,8 +137,6 @@ export function FilterBar({ activities, onFilterChange }: FilterBarProps) {
             regionOptions={regionOptions}
             selectedBranches={selectedBranches}
             setSelectedBranches={setSelectedBranches}
-            isRegionSelected={isRegionSelected}
-            isRegionPartiallySelected={isRegionPartiallySelected}
             handleRegionSelection={handleRegionSelection}
           />
 
