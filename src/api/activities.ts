@@ -38,6 +38,7 @@ interface ApiResponse {
 export const fetchActivities = async (): Promise<Activity[]> => {
   const response = await fetch(
     "https://www.sescsp.org.br/wp-json/wp/v1/atividades/filter?ppp=5000&page=1",
+    { credentials: "omit" },
   );
   if (!response.ok) {
     throw new Error("Failed to fetch activities");

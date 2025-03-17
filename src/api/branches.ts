@@ -25,6 +25,7 @@ interface ApiResponse {
 export const fetchBranches = async (): Promise<BranchesByRegion> => {
   const response = await fetch(
     "https://www.sescsp.org.br/wp-json/wp/v1/dinamico?unidades=&categorias=&gratuito=&online=&modes=unidade",
+    { credentials: "omit" },
   );
   if (!response.ok) {
     throw new Error("Failed to fetch branches");
