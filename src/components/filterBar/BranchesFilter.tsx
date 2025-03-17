@@ -50,11 +50,24 @@ export function BranchesFilter({
     return stateMap;
   }, [regionOptions, selectedBranches]);
 
+  const numSelectedBranches = selectedBranches.length;
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="flex items-center">
-          Unidades <ChevronDown className="ml-2 h-4 w-4" />
+        <Button
+          variant="outline"
+          className="flex items-center justify-between w-40"
+        >
+          <div className="flex items-center gap-2">
+            Unidades
+            {numSelectedBranches > 0 && (
+              <div className="flex justify-center items-center rounded-full bg-blue-100 w-6 h-6">
+                {numSelectedBranches}
+              </div>
+            )}
+          </div>
+          <ChevronDown className="ml-2 h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56 max-h-80 overflow-auto">

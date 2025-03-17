@@ -19,11 +19,24 @@ export function CategoriesFilter({
   selectedCategories,
   setSelectedCategories,
 }: CategoriesFilterProps) {
+  const numSelectedCategories = selectedCategories.length;
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="flex items-center">
-          Categorias <ChevronDown className="ml-2 h-4 w-4" />
+        <Button
+          variant="outline"
+          className="flex items-center justify-between w-40"
+        >
+          <div className="flex items-center gap-2">
+            Categorias
+            {numSelectedCategories > 0 && (
+              <div className="flex justify-center items-center rounded-full bg-blue-100 w-6 h-6">
+                {numSelectedCategories}
+              </div>
+            )}
+          </div>
+          <ChevronDown className="ml-2 h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56 max-h-80 overflow-auto">
