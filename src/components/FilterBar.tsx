@@ -7,7 +7,6 @@ import type { FilterState } from "@/hooks/useActivitiesFiltering";
 import { SearchBar } from "@/components/filterBar/SearchBar";
 import { CategoriesFilter } from "@/components/filterBar/CategoriesFilter";
 import { BranchesFilter } from "@/components/filterBar/BranchesFilter";
-import { SelectedFilters } from "@/components/filterBar/SelectedFilters";
 import { useFilterBarState } from "@/components/filterBar/useFilterBarState";
 
 export interface FilterOption {
@@ -85,14 +84,6 @@ export function FilterBar({ activities, onFilterChange }: FilterBarProps) {
           )}
         </div>
       </div>
-
-      {/* Show selected filters as pills */}
-      <SelectedFilters
-        selectedCategories={selectedCategories}
-        selectedBranches={selectedBranches}
-        onRemoveCategory={handleRemoveCategory}
-        onRemoveBranch={handleRemoveBranch}
-      />
     </div>
   );
 }
