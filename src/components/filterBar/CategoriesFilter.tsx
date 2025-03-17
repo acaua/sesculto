@@ -40,6 +40,7 @@ export function CategoriesFilter({
                 );
               }
             }}
+            onSelect={(event) => event.preventDefault()}
           >
             <div className="flex items-center">
               <div

@@ -72,6 +72,7 @@ export function BranchesFilter({
                   onCheckedChange={(checked) => {
                     handleRegionSelection(region.name, checked);
                   }}
+                  onSelect={(event) => event.preventDefault()}
                   className={
                     regionState.isPartiallySelected
                       ? "bg-gray-100 dark:bg-gray-800"
@@ -95,6 +96,7 @@ export function BranchesFilter({
                       );
                     }
                   }}
+                  onSelect={(event) => event.preventDefault()}
                 >
                   {branch.label}
                 </DropdownMenuCheckboxItem>
