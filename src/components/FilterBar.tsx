@@ -71,19 +71,20 @@ export function FilterBar({ activities, onFilterChange }: FilterBarProps) {
             setSelectedBranches={setSelectedBranches}
             handleRegionSelection={handleRegionSelection}
           />
-
-          {hasFilters && (
-            <Button
-              variant="ghost"
-              onClick={resetFilters}
-              className="flex items-center"
-            >
-              <X className="mr-2 h-4 w-4" />
-              Limpar
-            </Button>
-          )}
         </div>
       </div>
+      {hasFilters && (
+        <div className="mt-4">
+          <Button
+            variant="ghost"
+            onClick={resetFilters}
+            className="flex items-center"
+          >
+            <X className="mr-2 h-4 w-4" />
+            Limpar
+          </Button>
+        </div>
+      )}
     </div>
   );
 }
