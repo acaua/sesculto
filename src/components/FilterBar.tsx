@@ -36,8 +36,9 @@ export function FilterBar({ activities, onFilterChange }: FilterBarProps) {
     resetFilters,
     handleRegionSelection,
     handleAutocompleteSelection,
-    handleRemoveCategory,
-    handleRemoveBranch,
+    // TODO:
+    // handleRemoveCategory,
+    // handleRemoveBranch,
     handleImmediateSearch,
   } = useFilterBarState({
     activities,

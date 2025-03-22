@@ -2,5 +2,5 @@ pre-commit:
   parallel: true
   commands:
     check:
-      run: pnpm exec biome check --write --no-errors-on-unmatched --files-ignore-unknown=true --colors=off {staged_files}
+      run: pnpm run lint:fix
       stage_fixed: true

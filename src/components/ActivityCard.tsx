@@ -1,4 +1,3 @@
-import { Badge } from "@/components/ui/badge";
 import { type Activity, getActivityImage } from "@/api/activities";
 
 interface ActivityCardProps {
