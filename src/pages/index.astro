@@ -6,18 +6,18 @@ import Activities from "@/components/Activities";
 ---
 
 <Layout>
-    <main class="container mx-auto px-4 py-8">
-        <div class="flex items-start gap-2 mb-4">
-            <h1 class="text-3xl font-bold">Sesculto</h1>
-            <span class="bg-blue-800 text-white px-1 py-0.5 rounded text-xs"
-                >Beta</span
-            >
-        </div>
-        <Activities client:only="react">
-            <div slot="fallback" class="flex justify-center items-center h-64">
-                <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                <span class="ml-2">Carregando...</span>
-            </div>
-        </Activities>
-    </main>
+  <main class="container mx-auto px-4 py-8">
+    <div class="mb-4 flex items-start gap-2">
+      <h1 class="text-3xl font-bold">Sesculto</h1>
+      <span class="rounded bg-blue-800 px-1 py-0.5 text-xs text-white"
+        >Beta</span
+      >
+    </div>
+    <Activities client:only="react">
+      <div slot="fallback" class="flex h-64 items-center justify-center">
+        <Loader2 className="text-primary h-8 w-8 animate-spin" />
+        <span class="ml-2">Carregando...</span>
+      </div>
+    </Activities>
+  </main>
 </Layout>

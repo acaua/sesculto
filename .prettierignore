@@ -1,0 +1,6 @@
+# generated components with
+# pnpm dlx shadcn@canary add <component_name>
+src/components/ui/
+
+# generated types for cloudflare workers
+worker-configuration.d.ts

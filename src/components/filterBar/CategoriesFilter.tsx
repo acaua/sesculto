@@ -26,12 +26,12 @@ export function CategoriesFilter({
       <DropdownMenuTrigger asChild>
         <Button
           variant="outline"
-          className="flex items-center justify-between w-40"
+          className="flex w-40 items-center justify-between"
         >
           <div className="flex items-center gap-2">
             Categorias
             {numSelectedCategories > 0 && (
-              <div className="flex justify-center items-center rounded-full bg-blue-100 w-6 h-6">
+              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-100">
                 {numSelectedCategories}
               </div>
             )}
@@ -39,7 +39,7 @@ export function CategoriesFilter({
           <ChevronDown className="ml-2 h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56 max-h-80 overflow-auto">
+      <DropdownMenuContent className="max-h-80 w-56 overflow-auto">
         {categories.map((category) => (
           <DropdownMenuCheckboxItem
             key={category.value}
@@ -57,7 +57,7 @@ export function CategoriesFilter({
           >
             <div className="flex items-center">
               <div
-                className="w-3 h-3 rounded-full mr-2 bg-gray-600"
+                className="mr-2 h-3 w-3 rounded-full bg-gray-600"
                 style={
                   category.color ? { backgroundColor: category.color } : {}
                 }

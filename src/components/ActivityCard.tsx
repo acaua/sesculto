@@ -13,7 +13,7 @@ export function ActivityCard({ activity }: ActivityCardProps) {
       target="_blank"
       rel="noopener noreferrer"
     >
-      <article className="overflow-hidden bg-card flex flex-col rounded-xl border shadow-sm transition-shadow hover:shadow-lg">
+      <article className="bg-card flex flex-col overflow-hidden rounded-xl border shadow-sm transition-shadow hover:shadow-lg">
         <img
           src={image.url}
           alt={activity.titulo}
@@ -22,12 +22,12 @@ export function ActivityCard({ activity }: ActivityCardProps) {
           className="w-full"
           loading="lazy"
         />
-        <div className="flex flex-col h-full gap-4 p-5 pt-4">
+        <div className="flex h-full flex-col gap-4 p-5 pt-4">
           <div className="flex flex-col gap-1">
-            <h1 className="h-14 font-semibold text-lg line-clamp-2">
+            <h1 className="line-clamp-2 h-14 text-lg font-semibold">
               {activity.titulo}
             </h1>
-            <p className="h-10 text-muted-foreground text-sm line-clamp-2">
+            <p className="text-muted-foreground line-clamp-2 h-10 text-sm">
               {activity.complemento}
             </p>
           </div>

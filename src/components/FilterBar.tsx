@@ -46,8 +46,8 @@ export function FilterBar({ activities, onFilterChange }: FilterBarProps) {
   });
 
   return (
-    <div className="sticky top-0 z-10 bg-white dark:bg-gray-950 py-4 border-b mb-6">
-      <div className="flex flex-col md:flex-row gap-3">
+    <div className="sticky top-0 z-10 mb-6 border-b bg-white py-4 dark:bg-gray-950">
+      <div className="flex flex-col gap-3 md:flex-row">
         {/* Search Bar */}
         <SearchBar
           searchInputValue={searchInputValue}

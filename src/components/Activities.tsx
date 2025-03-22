@@ -10,8 +10,8 @@ export default function Activities() {
 
   if (isPending || !activities) {
     return (
-      <div className="flex justify-center items-center h-64">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <div className="flex h-64 items-center justify-center">
+        <Loader2 className="text-primary h-8 w-8 animate-spin" />
         <span className="ml-2">Carregando atividades...</span>
       </div>
     );
@@ -19,7 +19,7 @@ export default function Activities() {
 
   if (isError) {
     return (
-      <div className="flex justify-center items-center h-64 text-red-500">
+      <div className="flex h-64 items-center justify-center text-red-500">
         Erro ao carregar as atividades. Por favor, tente novamente mais tarde.
       </div>
     );
@@ -30,7 +30,7 @@ export default function Activities() {
       <FilterBar activities={activities} onFilterChange={setFilters} />
 
       {filteredActivities.length === 0 ? (
-        <div className="text-center py-12">
+        <div className="py-12 text-center">
           <p className="text-xl text-gray-500">
             Nenhuma atividade encontrada com os filtros selecionados.
           </p>
@@ -42,7 +42,7 @@ export default function Activities() {
               `${filteredActivities.length} de `}
             {activities.length} atividades encontradas
           </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {filteredActivities.map((activity) => (
               <ActivityCard key={activity.id} activity={activity} />
             ))}

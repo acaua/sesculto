@@ -1,6 +1,16 @@
 pre-commit:
-  parallel: true
   commands:
     check:
-      run: pnpm run lint:fix
+      run: pnpm run lint:fix {staged_files}
+      glob: "*.{js,jsx,ts,tsx,astro}"
       stage_fixed: true
+      skip:
+        - merge
+        - rebase
+    format:
+      run: pnpm exec prettier --write {staged_files}
+      glob: "*.{js,jsx,ts,tsx,astro,css,md,html,json}"
+      stage_fixed: true
+      skip:
+        - merge
+        - rebase

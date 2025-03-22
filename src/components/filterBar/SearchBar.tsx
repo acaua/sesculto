@@ -127,10 +127,10 @@ export function SearchBar({
   return (
     <div className="relative flex-grow">
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4 z-10" />
+        <Search className="text-muted-foreground absolute top-1/2 left-3 z-10 h-4 w-4 -translate-y-1/2 transform" />
         <input
           ref={inputRef}
-          className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 pl-10 pr-10"
+          className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 pr-10 pl-10 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
           placeholder="Buscar atividades, categorias ou unidades..."
           value={searchInputValue}
           onChange={(e) => setSearchInputValue(e.target.value)}
@@ -149,8 +149,8 @@ export function SearchBar({
         />
 
         {showCommandK && (
-          <div className="absolute right-2.5 top-1/2 transform -translate-y-1/2 bg-muted rounded px-1.5 py-0.5 text-xs text-muted-foreground flex items-center">
-            <CommandIcon className="h-3 w-3 mr-1" />
+          <div className="bg-muted text-muted-foreground absolute top-1/2 right-2.5 flex -translate-y-1/2 transform items-center rounded px-1.5 py-0.5 text-xs">
+            <CommandIcon className="mr-1 h-3 w-3" />
             <span className="hidden sm:inline">K</span>
           </div>
         )}
@@ -160,9 +160,9 @@ export function SearchBar({
             variant="ghost"
             size="sm"
             onClick={clearSearch}
-            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-7 w-7 p-0"
+            className="absolute top-1/2 right-2 h-7 w-7 -translate-y-1/2 transform p-0"
           >
-            <X className="h-4 w-4 text-muted-foreground" />
+            <X className="text-muted-foreground h-4 w-4" />
             <span className="sr-only">Clear search</span>
           </Button>
         )}
@@ -170,7 +170,7 @@ export function SearchBar({
 
       {/* Command menu for autocomplete */}
       {open && (
-        <div className="absolute z-50 w-full mt-1 rounded-md shadow-md">
+        <div className="absolute z-50 mt-1 w-full rounded-md shadow-md">
           <Command
             ref={commandRef}
             className="rounded-lg border shadow-md"
@@ -199,7 +199,7 @@ export function SearchBar({
                             }}
                           >
                             <div
-                              className="w-3 h-3 rounded-full mr-2 flex-shrink-0"
+                              className="mr-2 h-3 w-3 flex-shrink-0 rounded-full"
                               style={{
                                 backgroundColor: item.color || "gray",
                               }}

@@ -57,12 +57,12 @@ export function BranchesFilter({
       <DropdownMenuTrigger asChild>
         <Button
           variant="outline"
-          className="flex items-center justify-between w-40"
+          className="flex w-40 items-center justify-between"
         >
           <div className="flex items-center gap-2">
             Unidades
             {numSelectedBranches > 0 && (
-              <div className="flex justify-center items-center rounded-full bg-blue-100 w-6 h-6">
+              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-100">
                 {numSelectedBranches}
               </div>
             )}
@@ -70,7 +70,7 @@ export function BranchesFilter({
           <ChevronDown className="ml-2 h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56 max-h-80 overflow-auto">
+      <DropdownMenuContent className="max-h-80 w-56 overflow-auto">
         {regionOptions.map((region, index) => {
           const regionState = regionSelectionStates.get(region.name) || {
             isSelected: false,
