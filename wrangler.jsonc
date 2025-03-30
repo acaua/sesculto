@@ -5,14 +5,18 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "sesculto",
-  "main": "./dist/_worker.js/index.js",
+  "main": "./src/index.ts",
   "compatibility_date": "2025-02-14",
+  "compatibility_flags": ["nodejs_compat"],
   "assets": {
     "binding": "ASSETS",
     "directory": "./dist",
   },
   "observability": {
     "enabled": true,
+  },
+  "triggers": {
+    "crons": ["2 * * * *"],
   },
   /**
    * Smart Placement
@@ -26,6 +30,13 @@
    * databases, object storage, AI inference, real-time communication and more.
    * https://developers.cloudflare.com/workers/runtime-apis/bindings/
    */
+  "r2_buckets": [
+    {
+      "binding": "SESCONTENT_BUCKET",
+      "bucket_name": "sescontent",
+      // "preview_bucket_name": "sescontent",
+    },
+  ],
 
   /**
    * Environment Variables
