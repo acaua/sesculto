@@ -11,10 +11,7 @@ import {
 
 export interface RegionOption {
   name: string;
-  branches: {
-    value: string;
-    label: string;
-  }[];
+  branches: string[];
 }
 
 // Map for region display names
@@ -77,9 +74,6 @@ function transformToRegionOptions(
 
 function transformBranches(branches: Branch[]) {
   return branches
-    .map((branch) => ({
-      value: branch.groupName,
-      label: branch.groupName,
-    }))
-    .sort((a, b) => a.label.localeCompare(b.label));
+    .map((branch) => branch.groupName)
+    .sort((a, b) => a.localeCompare(b));
 }

@@ -1,20 +1,19 @@
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useDebounceValue } from "usehooks-ts";
 
-import type { Activity } from "@/api/activities";
-import { extractUniqueCategories, type CategoryOption } from "@/api/categories";
+import { fetchCategories } from "@/api/categories";
 import type { FilterState } from "@/hooks/useActivitiesFiltering";
 import { useBranches } from "@/hooks/useBranches";
 import type { FilterOption } from "@/components/FilterBar";
+import queryClient from "@/lib/queryClient";
 
 interface UseFilterBarStateProps {
-  activities: Activity[];
   onFilterChange: (filters: FilterState) => void;
   debounceTime?: number;
 }
 
 export function useFilterBarState({
-  activities,
   onFilterChange,
   debounceTime = 250,
 }: UseFilterBarStateProps) {
@@ -27,9 +26,13 @@ export function useFilterBarState({
 
   const { regionOptions, allBranches } = useBranches();
 
-  const categories = useMemo<CategoryOption[]>(
-    () => extractUniqueCategories(activities),
-    [activities],
+  const { data: categories } = useQuery(
+    {
+      queryKey: ["categories"],
+      queryFn: fetchCategories,
+      staleTime: 60 * 60 * 1000, // 1 hour
+    },
+    queryClient,
   );
 
   const hasFilters =
@@ -71,17 +74,15 @@ export function useFilterBarState({
       const region = regionOptions.find((r) => r.name === regionName);
       if (!region) return;
 
-      const branchValues = region.branches.map((b) => b.value);
-
       if (isSelected) {
         setSelectedBranches((prev) => {
           // Add branches not already selected
-          const newBranches = branchValues.filter((b) => !prev.includes(b));
+          const newBranches = region.branches.filter((b) => !prev.includes(b));
           return [...prev, ...newBranches];
         });
       } else {
         setSelectedBranches((prev) =>
-          prev.filter((b) => !branchValues.includes(b)),
+          prev.filter((b) => !region.branches.includes(b)),
         );
       }
     },
@@ -118,8 +119,8 @@ export function useFilterBarState({
 
   return {
     // State and derived data
-    searchInputValue,
     categories,
+    searchInputValue,
     selectedCategories,
     selectedBranches,
     hasFilters,

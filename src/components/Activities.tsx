@@ -27,7 +27,7 @@ export default function Activities() {
 
   return (
     <div>
-      <FilterBar activities={activities} onFilterChange={setFilters} />
+      <FilterBar onFilterChange={setFilters} />
 
       {filteredActivities.length === 0 ? (
         <div className="py-12 text-center">

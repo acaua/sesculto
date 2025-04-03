@@ -35,7 +35,7 @@ export function useActivitiesFiltering() {
     if (!activities) return null;
 
     return new Fuse(activities, {
-      keys: ["titulo", "complemento", "categorias.link", "unidade.name"],
+      keys: ["title", "details", "categories", "branches"],
       threshold: 0.4, // Lower threshold = stricter matching
       ignoreLocation: true,
       useExtendedSearch: true,
@@ -97,14 +97,14 @@ export function useActivitiesFiltering() {
       // Filter by categories
       const matchesCategories =
         filters.categories.length === 0 ||
-        activity.categorias.some((cat) =>
-          filters.categories.includes(cat.link),
+        activity.categories.some((category) =>
+          filters.categories.includes(category),
         );
 
       // Filter by locations
       const matchesUnidades =
         filters.branches.length === 0 ||
-        activity.unidade.some((uni) => filters.branches.includes(uni.name));
+        filters.branches.includes(activity.branch);
 
       return matchesCategories && matchesUnidades;
     });

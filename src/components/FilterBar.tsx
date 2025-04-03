@@ -1,7 +1,6 @@
 import { X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import type { Activity } from "@/api/activities";
 import type { FilterState } from "@/hooks/useActivitiesFiltering";
 
 import { SearchBar } from "@/components/filterBar/SearchBar";
@@ -11,21 +10,18 @@ import { useFilterBarState } from "@/components/filterBar/useFilterBarState";
 
 export interface FilterOption {
   value: string;
-  label: string;
-  color?: string;
   type: "category" | "branch";
 }
 
 interface FilterBarProps {
-  activities: Activity[];
   onFilterChange: (filters: FilterState) => void;
 }
 
-export function FilterBar({ activities, onFilterChange }: FilterBarProps) {
+export function FilterBar({ onFilterChange }: FilterBarProps) {
   const {
+    categories,
     searchInputValue,
     setSearchInputValue,
-    categories,
     selectedCategories,
     setSelectedCategories,
     selectedBranches,
@@ -40,19 +36,20 @@ export function FilterBar({ activities, onFilterChange }: FilterBarProps) {
     // handleRemoveCategory,
     // handleRemoveBranch,
     handleImmediateSearch,
-  } = useFilterBarState({
-    activities,
-    onFilterChange,
-  });
+  } = useFilterBarState({ onFilterChange });
+
+  if (!categories) {
+    return null;
+  }
 
   return (
     <div className="sticky top-0 z-10 mb-6 border-b bg-white py-4 dark:bg-gray-950">
       <div className="flex flex-col gap-3 md:flex-row">
         {/* Search Bar */}
         <SearchBar
+          categories={categories}
           searchInputValue={searchInputValue}
           setSearchInputValue={setSearchInputValue}
-          categories={categories}
           allBranches={allBranches}
           onAutocompleteSelection={handleAutocompleteSelection}
           onEnterPress={handleImmediateSearch}

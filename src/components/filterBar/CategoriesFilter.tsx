@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 interface CategoriesFilterProps {
-  categories: { value: string; label: string; color?: string }[];
+  categories: string[];
   selectedCategories: string[];
   setSelectedCategories: (categories: string[]) => void;
 }
@@ -42,28 +42,20 @@ export function CategoriesFilter({
       <DropdownMenuContent className="max-h-80 w-56 overflow-auto">
         {categories.map((category) => (
           <DropdownMenuCheckboxItem
-            key={category.value}
-            checked={selectedCategories.includes(category.value)}
+            key={category}
+            checked={selectedCategories.includes(category)}
             onCheckedChange={(checked) => {
               if (checked) {
-                setSelectedCategories([...selectedCategories, category.value]);
+                setSelectedCategories([...selectedCategories, category]);
               } else {
                 setSelectedCategories(
-                  selectedCategories.filter((c) => c !== category.value),
+                  selectedCategories.filter((c) => c !== category),
                 );
               }
             }}
             onSelect={(event) => event.preventDefault()}
           >
-            <div className="flex items-center">
-              <div
-                className="mr-2 h-3 w-3 rounded-full bg-gray-600"
-                style={
-                  category.color ? { backgroundColor: category.color } : {}
-                }
-              />
-              {category.label}
-            </div>
+            <div className="flex items-center">{category}</div>
           </DropdownMenuCheckboxItem>
         ))}
       </DropdownMenuContent>

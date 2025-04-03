@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { ChevronDown } from "lucide-react";
 
+import { type RegionOption } from "@/hooks/useBranches";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -12,10 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 interface BranchesFilterProps {
-  regionOptions: {
-    name: string;
-    branches: { value: string; label: string }[];
-  }[];
+  regionOptions: RegionOption[];
   selectedBranches: string[];
   setSelectedBranches: (branches: string[]) => void;
   handleRegionSelection: (regionName: string, isSelected: boolean) => void;
@@ -31,15 +29,13 @@ export function BranchesFilter({
     const stateMap = new Map();
 
     for (const region of regionOptions) {
-      const regionBranchValues = region.branches.map((b) => b.value);
-
-      const isSelected = regionBranchValues.every((b) =>
+      const isSelected = region.branches.every((b) =>
         selectedBranches.includes(b),
       );
 
       const isPartiallySelected =
-        regionBranchValues.some((b) => selectedBranches.includes(b)) &&
-        !regionBranchValues.every((b) => selectedBranches.includes(b));
+        region.branches.some((b) => selectedBranches.includes(b)) &&
+        !isSelected;
 
       stateMap.set(region.name, {
         isSelected,
@@ -98,20 +94,20 @@ export function BranchesFilter({
               <DropdownMenuSeparator />
               {region.branches.map((branch) => (
                 <DropdownMenuCheckboxItem
-                  key={branch.value}
-                  checked={selectedBranches.includes(branch.value)}
+                  key={branch}
+                  checked={selectedBranches.includes(branch)}
                   onCheckedChange={(checked) => {
                     if (checked) {
-                      setSelectedBranches([...selectedBranches, branch.value]);
+                      setSelectedBranches([...selectedBranches, branch]);
                     } else {
                       setSelectedBranches(
-                        selectedBranches.filter((b) => b !== branch.value),
+                        selectedBranches.filter((b) => b !== branch),
                       );
                     }
                   }}
                   onSelect={(event) => event.preventDefault()}
                 >
-                  {branch.label}
+                  {branch}
                 </DropdownMenuCheckboxItem>
               ))}
               {index !== regionOptions.length - 1 && <DropdownMenuSeparator />}

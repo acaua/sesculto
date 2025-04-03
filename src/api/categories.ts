@@ -1,32 +1,32 @@
 import type { Activity } from "@/api/activities";
 
-export interface CategoryOption {
-  value: string;
-  label: string;
-  color?: string;
-}
+export const fetchCategories = async (): Promise<string[]> => {
+  const response = await fetch("https://sescontent.acaua.dev/categories.json");
 
-export function extractUniqueCategories(
-  activities: Activity[],
-): CategoryOption[] {
-  const uniqueCategories: CategoryOption[] = [];
+  if (!response.ok) {
+    throw new Error("Failed to fetch categories");
+  }
+
+  const categories: string[] = await response.json();
+
+  return categories;
+};
+
+export function extractUniqueCategories(activities: Activity[]): string[] {
+  const categoriesSet = new Set<string>();
 
   for (const activity of activities) {
-    for (const cat of activity.categorias) {
-      if (!uniqueCategories.some((c) => c.value === cat.link)) {
-        uniqueCategories.push({
-          value: cat.link,
-          label: getCategoryLabel(cat.link),
-          color: cat.cor,
-        });
-      }
+    for (const category of activity.categories) {
+      categoriesSet.add(category);
     }
   }
 
+  const categories = Array.from(categoriesSet);
+
   // Sort alphabetically
-  return uniqueCategories.sort((a, b) => a.label.localeCompare(b.label));
+  return categories.sort((a, b) => a.localeCompare(b));
 }
 
-export function getCategoryLabel(category: string): string {
-  return category.replace(/\/categorias-atividades\//, "");
+export function getCategoryNameFromLink(category: string): string {
+  return category.replace(/\/categorias-atividades\//, "").replace("-", " ");
 }

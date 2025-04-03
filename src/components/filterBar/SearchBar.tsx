@@ -14,16 +14,16 @@ import type { FilterOption } from "@/components/FilterBar";
 interface SearchBarProps {
   searchInputValue: string;
   setSearchInputValue: (value: string) => void;
-  categories: Omit<FilterOption, "type">[];
-  allBranches: { value: string; label: string }[];
+  categories: string[];
+  allBranches: string[];
   onAutocompleteSelection: (item: FilterOption) => void;
   onEnterPress: () => void;
 }
 
 export function SearchBar({
+  categories,
   searchInputValue,
   setSearchInputValue,
-  categories,
   allBranches,
   onAutocompleteSelection,
   onEnterPress,
@@ -40,14 +40,14 @@ export function SearchBar({
     const lowerSearch = searchInputValue.toLowerCase();
 
     const filteredCategories = categories
-      .filter((cat) => cat.label.toLowerCase().includes(lowerSearch))
+      .filter((category) => category.toLowerCase().includes(lowerSearch))
       .slice(0, 5)
-      .map((cat) => ({ ...cat, type: "category" as const }));
+      .map((category) => ({ value: category, type: "category" as const }));
 
     const filteredBranches = allBranches
-      .filter((branch) => branch.label.toLowerCase().includes(lowerSearch))
+      .filter((branch) => branch.toLowerCase().includes(lowerSearch))
       .slice(0, 5)
-      .map((branch) => ({ ...branch, type: "branch" as const }));
+      .map((branch) => ({ value: branch, type: "branch" as const }));
 
     return [...filteredCategories, ...filteredBranches];
   }, [searchInputValue, categories, allBranches]);
@@ -191,20 +191,14 @@ export function SearchBar({
                         .map((item) => (
                           <CommandItem
                             key={`cat-${item.value}`}
-                            value={item.label}
+                            value={item.value}
                             onSelect={() => {
                               onAutocompleteSelection(item);
                               setOpen(false);
                               inputRef.current?.focus();
                             }}
                           >
-                            <div
-                              className="mr-2 h-3 w-3 flex-shrink-0 rounded-full"
-                              style={{
-                                backgroundColor: item.color || "gray",
-                              }}
-                            />
-                            {item.label}
+                            {item.value}
                           </CommandItem>
                         ))}
                     </CommandGroup>
@@ -219,14 +213,14 @@ export function SearchBar({
                         .map((item) => (
                           <CommandItem
                             key={`branch-${item.value}`}
-                            value={item.label}
+                            value={item.value}
                             onSelect={() => {
                               onAutocompleteSelection(item);
                               setOpen(false);
                               inputRef.current?.focus();
                             }}
                           >
-                            {item.label}
+                            {item.value}
                           </CommandItem>
                         ))}
                     </CommandGroup>

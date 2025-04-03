@@ -34,7 +34,7 @@
     {
       "binding": "SESCONTENT_BUCKET",
       "bucket_name": "sescontent",
-      // "preview_bucket_name": "sescontent",
+      "preview_bucket_name": "sescontent-dev",
     },
   ],
 
