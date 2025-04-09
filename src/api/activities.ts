@@ -1,20 +1,16 @@
+export const IMAGE_DEFAULT_SIZE = { width: 320, height: 160 };
+
 export interface Activity {
   id: number;
   title: string;
   details: string;
-  image: Image;
+  imageUrl: string;
   link: string;
   nextSessionDate: string;
   firstSessionDate: string;
   lastSessionDate: string;
   branch: string;
   categories: Array<string>;
-}
-
-export interface Image {
-  url: string;
-  width: number;
-  height: number;
 }
 
 export const fetchActivities = async (): Promise<Activity[]> => {

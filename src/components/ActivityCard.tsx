@@ -1,4 +1,4 @@
-import { type Activity } from "@/api/activities";
+import { IMAGE_DEFAULT_SIZE, type Activity } from "@/api/activities";
 
 interface ActivityCardProps {
   activity: Activity;
@@ -13,10 +13,10 @@ export function ActivityCard({ activity }: ActivityCardProps) {
     >
       <article className="bg-card flex flex-col overflow-hidden rounded-xl border shadow-sm transition-shadow hover:shadow-lg">
         <img
-          src={activity.image.url}
+          src={activity.imageUrl}
           alt={activity.title}
-          width={activity.image.width}
-          height={activity.image.height}
+          width={IMAGE_DEFAULT_SIZE.width}
+          height={IMAGE_DEFAULT_SIZE.height}
           className="w-full"
           loading="lazy"
         />

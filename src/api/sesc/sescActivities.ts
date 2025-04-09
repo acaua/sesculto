@@ -1,7 +1,5 @@
-import type { Image, Activity } from "@/api/activities";
+import type { Activity } from "@/api/activities";
 import { getCategoryNameFromLink } from "@/api/categories";
-
-const IMAGE_DEFAULT_SIZE = { width: 300, height: 150 };
 
 interface SescActivity {
   id: number;
@@ -54,7 +52,7 @@ export const fetchActivitiesFromSesc = async (): Promise<SescActivity[]> => {
 export const sescActivityToActivity = (
   sescActivity: SescActivity,
 ): Activity => {
-  const image = getActivityImage(sescActivity);
+  const imageUrl = getActivityImageUrl(sescActivity);
   const categories = sescActivity.categorias.map((category) =>
     getCategoryNameFromLink(category.link),
   );
@@ -64,7 +62,7 @@ export const sescActivityToActivity = (
     id: sescActivity.id,
     title: sescActivity.titulo,
     details: sescActivity.complemento,
-    image,
+    imageUrl,
     link: sescActivity.link,
     nextSessionDate: sescActivity.dataProxSessao,
     firstSessionDate: sescActivity.dataPrimeiraSessao,
@@ -74,22 +72,18 @@ export const sescActivityToActivity = (
   };
 };
 
-const getActivityImage = (activity: SescActivity): Image => {
+const getActivityImageUrl = (activity: SescActivity): string => {
   if (
     !activity.imagens ||
     Array.isArray(activity.imagens) ||
     !activity.imagens["homepage-thumb"]
   )
-    return { url: activity.imagem, ...IMAGE_DEFAULT_SIZE };
+    return activity.imagem;
 
   const basePath = activity.imagem.substring(
     0,
     activity.imagem.lastIndexOf("/") + 1,
   );
 
-  return {
-    url: basePath + activity.imagens["homepage-thumb"].file,
-    width: activity.imagens["homepage-thumb"].width,
-    height: activity.imagens["homepage-thumb"].height,
-  };
+  return basePath + activity.imagens["homepage-thumb"].file;
 };
