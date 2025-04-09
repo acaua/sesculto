@@ -28,5 +28,5 @@ export function extractUniqueCategories(activities: Activity[]): string[] {
 }
 
 export function getCategoryNameFromLink(category: string): string {
-  return category.replace(/\/categorias-atividades\//, "").replace("-", " ");
+  return category.replace(/\/categorias-atividades\//, "").replaceAll("-", " ");
 }

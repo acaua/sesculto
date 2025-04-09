@@ -69,8 +69,8 @@ export const sescActivityToActivity = (
     nextSessionDate: sescActivity.dataProxSessao,
     firstSessionDate: sescActivity.dataPrimeiraSessao,
     lastSessionDate: sescActivity.dataUltimaSessao,
-    categories,
     branch,
+    categories,
   };
 };
 

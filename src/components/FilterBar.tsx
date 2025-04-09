@@ -1,7 +1,6 @@
 import { X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import type { FilterState } from "@/hooks/useActivitiesFiltering";
 
 import { SearchBar } from "@/components/filterBar/SearchBar";
 import { CategoriesFilter } from "@/components/filterBar/CategoriesFilter";
@@ -14,33 +13,44 @@ export interface FilterOption {
 }
 
 interface FilterBarProps {
-  onFilterChange: (filters: FilterState) => void;
+  categories: string[];
+  setSearchString: (searchString: string) => void;
+  hasFilters: boolean;
+  resetFilters: () => void;
+  branchesFilter: string[];
+  addBranchesToFilters: (branches: string | string[]) => void;
+  removeBranchesFromFilters: (branches: string | string[]) => void;
+  categoriesFilter: string[];
+  addCategoryToFilters: (category: string) => void;
+  removeCategoryFromFilters: (category: string) => void;
 }
 
-export function FilterBar({ onFilterChange }: FilterBarProps) {
+export function FilterBar({
+  categories,
+  setSearchString,
+  hasFilters,
+  resetFilters,
+  branchesFilter,
+  addBranchesToFilters,
+  removeBranchesFromFilters,
+  categoriesFilter,
+  addCategoryToFilters,
+  removeCategoryFromFilters,
+}: FilterBarProps) {
   const {
-    categories,
     searchInputValue,
-    setSearchInputValue,
-    selectedCategories,
-    setSelectedCategories,
-    selectedBranches,
-    setSelectedBranches,
-    hasFilters,
     regionOptions,
     allBranches,
-    resetFilters,
+    handleSearchInputValueChange,
     handleRegionSelection,
     handleAutocompleteSelection,
-    // TODO:
-    // handleRemoveCategory,
-    // handleRemoveBranch,
     handleImmediateSearch,
-  } = useFilterBarState({ onFilterChange });
-
-  if (!categories) {
-    return null;
-  }
+  } = useFilterBarState({
+    setSearchString,
+    addBranchesToFilters,
+    removeBranchesFromFilters,
+    addCategoryToFilters,
+  });
 
   return (
     <div className="sticky top-0 z-10 mb-6 border-b bg-white py-4 dark:bg-gray-950">
@@ -49,7 +59,7 @@ export function FilterBar({ onFilterChange }: FilterBarProps) {
         <SearchBar
           categories={categories}
           searchInputValue={searchInputValue}
-          setSearchInputValue={setSearchInputValue}
+          setSearchInputValue={handleSearchInputValueChange}
           allBranches={allBranches}
           onAutocompleteSelection={handleAutocompleteSelection}
           onEnterPress={handleImmediateSearch}
@@ -59,14 +69,16 @@ export function FilterBar({ onFilterChange }: FilterBarProps) {
         <div className="flex gap-2">
           <CategoriesFilter
             categories={categories}
-            selectedCategories={selectedCategories}
-            setSelectedCategories={setSelectedCategories}
+            selectedCategories={categoriesFilter}
+            addCategoryToFilters={addCategoryToFilters}
+            removeCategoryFromFilters={removeCategoryFromFilters}
           />
 
           <BranchesFilter
             regionOptions={regionOptions}
-            selectedBranches={selectedBranches}
-            setSelectedBranches={setSelectedBranches}
+            selectedBranches={branchesFilter}
+            addBranchesToFilters={addBranchesToFilters}
+            removeBranchesFromFilters={removeBranchesFromFilters}
             handleRegionSelection={handleRegionSelection}
           />
         </div>

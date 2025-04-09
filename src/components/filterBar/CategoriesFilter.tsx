@@ -11,13 +11,15 @@ import {
 interface CategoriesFilterProps {
   categories: string[];
   selectedCategories: string[];
-  setSelectedCategories: (categories: string[]) => void;
+  addCategoryToFilters: (category: string) => void;
+  removeCategoryFromFilters: (category: string) => void;
 }
 
 export function CategoriesFilter({
   categories,
   selectedCategories,
-  setSelectedCategories,
+  addCategoryToFilters,
+  removeCategoryFromFilters,
 }: CategoriesFilterProps) {
   const numSelectedCategories = selectedCategories.length;
 
@@ -46,11 +48,9 @@ export function CategoriesFilter({
             checked={selectedCategories.includes(category)}
             onCheckedChange={(checked) => {
               if (checked) {
-                setSelectedCategories([...selectedCategories, category]);
+                addCategoryToFilters(category);
               } else {
-                setSelectedCategories(
-                  selectedCategories.filter((c) => c !== category),
-                );
+                removeCategoryFromFilters(category);
               }
             }}
             onSelect={(event) => event.preventDefault()}

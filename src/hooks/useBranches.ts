@@ -4,8 +4,8 @@ import { useQuery } from "@tanstack/react-query";
 import queryClient from "@/lib/queryClient";
 import {
   fetchBranches,
-  type Branch,
   Region,
+  type Branch,
   type BranchesByRegion,
 } from "@/api/branches";
 

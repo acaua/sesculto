@@ -15,14 +15,16 @@ import {
 interface BranchesFilterProps {
   regionOptions: RegionOption[];
   selectedBranches: string[];
-  setSelectedBranches: (branches: string[]) => void;
+  addBranchesToFilters: (branch: string | string[]) => void;
+  removeBranchesFromFilters: (branches: string | string[]) => void;
   handleRegionSelection: (regionName: string, isSelected: boolean) => void;
 }
 
 export function BranchesFilter({
   regionOptions,
   selectedBranches,
-  setSelectedBranches,
+  addBranchesToFilters,
+  removeBranchesFromFilters,
   handleRegionSelection,
 }: BranchesFilterProps) {
   const regionSelectionStates = useMemo(() => {
@@ -98,11 +100,9 @@ export function BranchesFilter({
                   checked={selectedBranches.includes(branch)}
                   onCheckedChange={(checked) => {
                     if (checked) {
-                      setSelectedBranches([...selectedBranches, branch]);
+                      addBranchesToFilters(branch);
                     } else {
-                      setSelectedBranches(
-                        selectedBranches.filter((b) => b !== branch),
-                      );
+                      removeBranchesFromFilters(branch);
                     }
                   }}
                   onSelect={(event) => event.preventDefault()}

@@ -7,8 +7,8 @@ export interface Activity {
   nextSessionDate: string;
   firstSessionDate: string;
   lastSessionDate: string;
-  categories: Array<string>;
   branch: string;
+  categories: Array<string>;
 }
 
 export interface Image {

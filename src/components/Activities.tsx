@@ -5,10 +5,23 @@ import { ActivityCard } from "@/components/ActivityCard";
 import { FilterBar } from "@/components/FilterBar";
 
 export default function Activities() {
-  const { activities, filteredActivities, setFilters, isPending, isError } =
-    useActivitiesFiltering();
+  const {
+    activities,
+    filteredActivities,
+    categories,
+    setSearchString,
+    hasFilters,
+    resetFilters,
+    branchesFilter,
+    addCategoryToFilters,
+    removeCategoryFromFilters,
+    categoriesFilter,
+    addBranchesToFilters,
+    removeBranchesFromFilters,
+    error,
+  } = useActivitiesFiltering();
 
-  if (isPending || !activities) {
+  if (!activities || !filteredActivities || !categories) {
     return (
       <div className="flex h-64 items-center justify-center">
         <Loader2 className="text-primary h-8 w-8 animate-spin" />
@@ -17,7 +30,7 @@ export default function Activities() {
     );
   }
 
-  if (isError) {
+  if (error) {
     return (
       <div className="flex h-64 items-center justify-center text-red-500">
         Erro ao carregar as atividades. Por favor, tente novamente mais tarde.
@@ -27,7 +40,18 @@ export default function Activities() {
 
   return (
     <div>
-      <FilterBar onFilterChange={setFilters} />
+      <FilterBar
+        categories={categories}
+        setSearchString={setSearchString}
+        hasFilters={hasFilters}
+        resetFilters={resetFilters}
+        branchesFilter={branchesFilter}
+        addCategoryToFilters={addCategoryToFilters}
+        removeCategoryFromFilters={removeCategoryFromFilters}
+        categoriesFilter={categoriesFilter}
+        addBranchesToFilters={addBranchesToFilters}
+        removeBranchesFromFilters={removeBranchesFromFilters}
+      />
 
       {filteredActivities.length === 0 ? (
         <div className="py-12 text-center">
