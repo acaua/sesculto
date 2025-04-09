@@ -5,17 +5,18 @@ import useCategories from "@/hooks/useCategories";
 import useFuse from "@/hooks/useFuse";
 
 export function useActivitiesFiltering() {
+  const [searchString, setSearchString] = useState("");
   const [branchesFilter, setBranchesFilter] = useState<string[]>([]);
   const [categoriesFilter, setCategoriesFilter] = useState<string[]>([]);
 
   const { activities, error: errorActivities } = useActivities();
   const { categories, error: errorCategories } = useCategories();
 
-  const {
-    filteredList: searchedActivities,
+  const { filteredList: searchedActivities } = useFuse(
+    activities,
     searchString,
-    setSearchString,
-  } = useFuse(activities, { keys: ["title", "details"] });
+    { keys: ["title", "details"] },
+  );
 
   const filteredActivities = useMemo(() => {
     if (!searchedActivities) return undefined;
@@ -29,10 +30,10 @@ export function useActivitiesFiltering() {
         );
 
       // Filter by locations
-      const matchesUnidades =
+      const matchesBranches =
         branchesFilter.length === 0 || branchesFilter.includes(activity.branch);
 
-      return matchesCategories && matchesUnidades;
+      return matchesCategories && matchesBranches;
     });
   }, [searchedActivities, categoriesFilter, branchesFilter]);
 

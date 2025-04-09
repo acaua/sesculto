@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useMemo } from "react";
 
 import Fuse, { type IFuseOptions } from "fuse.js";
 
@@ -9,14 +9,11 @@ const defaultOptions = {
 
 export default function useFuse<T>(
   list: ReadonlyArray<T> | undefined,
+  searchString: string,
   fuseOptions?: IFuseOptions<T>,
 ): {
   filteredList: ReadonlyArray<T> | undefined;
-  searchString: string;
-  setSearchString: (query: string) => void;
 } {
-  const [searchString, setSearchStringRaw] = useState("");
-
   const fuseSearch = useMemo(() => {
     if (!list) return undefined;
 
@@ -26,17 +23,14 @@ export default function useFuse<T>(
   const filteredList = useMemo(() => {
     if (!fuseSearch || !list) return undefined;
 
-    if (searchString === "") {
+    const searchStringTrimmed = searchString.trim();
+
+    if (searchStringTrimmed === "") {
       return list;
     }
 
-    return fuseSearch.search(searchString).map((result) => result.item);
+    return fuseSearch.search(searchStringTrimmed).map((result) => result.item);
   }, [fuseSearch, list, searchString]);
 
-  const setSearchString = useCallback(
-    (searchString: string) => setSearchStringRaw(searchString.trim()),
-    [setSearchStringRaw],
-  );
-
-  return { filteredList, searchString, setSearchString };
+  return { filteredList };
 }
