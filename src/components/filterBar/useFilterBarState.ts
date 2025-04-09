@@ -3,20 +3,19 @@ import { useDebounceCallback } from "usehooks-ts";
 
 import { useBranches } from "@/hooks/useBranches";
 import type { FilterOption } from "@/components/FilterBar";
+import { type StatefulSet } from "@/hooks/useSet";
 
 interface UseFilterBarStateProps {
   setSearchString: (searchString: string) => void;
-  addBranchesToFilters: (branchId: string | string[]) => void;
-  removeBranchesFromFilters: (branches: string | string[]) => void;
-  addCategoryToFilters: (categoryId: string) => void;
+  branchesFilterSet: StatefulSet<string>;
+  categoriesFilterSet: StatefulSet<string>;
   debounceTime?: number;
 }
 
 export function useFilterBarState({
   setSearchString: onSearchStringChange,
-  addBranchesToFilters,
-  removeBranchesFromFilters,
-  addCategoryToFilters,
+  branchesFilterSet,
+  categoriesFilterSet,
   debounceTime = 250,
 }: UseFilterBarStateProps) {
   const [searchInputValue, setSearchInputValue] = useState("");
@@ -41,28 +40,28 @@ export function useFilterBarState({
       if (!region) return;
 
       if (isSelected) {
-        addBranchesToFilters(region.branches);
+        branchesFilterSet.add(region.branches);
       } else {
-        removeBranchesFromFilters(region.branches);
+        branchesFilterSet.delete(region.branches);
       }
     },
-    [regionOptions, addBranchesToFilters, removeBranchesFromFilters],
+    [regionOptions, branchesFilterSet],
   );
 
   const handleAutocompleteSelection = useCallback(
     (item: FilterOption) => {
       if (item.type === "category") {
-        addCategoryToFilters(item.value);
+        categoriesFilterSet.add(item.value);
       } else {
-        addBranchesToFilters(item.value);
+        branchesFilterSet.add(item.value);
       }
 
       handleSearchInputValueChange("");
       debounceCallback.flush();
     },
     [
-      addBranchesToFilters,
-      addCategoryToFilters,
+      branchesFilterSet,
+      categoriesFilterSet,
       handleSearchInputValueChange,
       debounceCallback,
     ],

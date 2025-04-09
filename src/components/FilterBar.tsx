@@ -6,6 +6,7 @@ import { SearchBar } from "@/components/filterBar/SearchBar";
 import { CategoriesFilter } from "@/components/filterBar/CategoriesFilter";
 import { BranchesFilter } from "@/components/filterBar/BranchesFilter";
 import { useFilterBarState } from "@/components/filterBar/useFilterBarState";
+import { type StatefulSet } from "@/hooks/useSet";
 
 export interface FilterOption {
   value: string;
@@ -17,12 +18,8 @@ interface FilterBarProps {
   setSearchString: (searchString: string) => void;
   hasFilters: boolean;
   resetFilters: () => void;
-  branchesFilter: string[];
-  addBranchesToFilters: (branches: string | string[]) => void;
-  removeBranchesFromFilters: (branches: string | string[]) => void;
-  categoriesFilter: string[];
-  addCategoryToFilters: (category: string) => void;
-  removeCategoryFromFilters: (category: string) => void;
+  branchesFilterSet: StatefulSet<string>;
+  categoriesFilterSet: StatefulSet<string>;
 }
 
 export function FilterBar({
@@ -30,12 +27,8 @@ export function FilterBar({
   setSearchString,
   hasFilters,
   resetFilters,
-  branchesFilter,
-  addBranchesToFilters,
-  removeBranchesFromFilters,
-  categoriesFilter,
-  addCategoryToFilters,
-  removeCategoryFromFilters,
+  branchesFilterSet,
+  categoriesFilterSet,
 }: FilterBarProps) {
   const {
     searchInputValue,
@@ -47,9 +40,8 @@ export function FilterBar({
     handleImmediateSearch,
   } = useFilterBarState({
     setSearchString,
-    addBranchesToFilters,
-    removeBranchesFromFilters,
-    addCategoryToFilters,
+    branchesFilterSet,
+    categoriesFilterSet,
   });
 
   return (
@@ -69,16 +61,12 @@ export function FilterBar({
         <div className="flex gap-2">
           <CategoriesFilter
             categories={categories}
-            selectedCategories={categoriesFilter}
-            addCategoryToFilters={addCategoryToFilters}
-            removeCategoryFromFilters={removeCategoryFromFilters}
+            categoriesFilterSet={categoriesFilterSet}
           />
 
           <BranchesFilter
             regionOptions={regionOptions}
-            selectedBranches={branchesFilter}
-            addBranchesToFilters={addBranchesToFilters}
-            removeBranchesFromFilters={removeBranchesFromFilters}
+            branchesFilterSet={branchesFilterSet}
             handleRegionSelection={handleRegionSelection}
           />
         </div>

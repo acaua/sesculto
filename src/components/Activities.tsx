@@ -12,12 +12,8 @@ export default function Activities() {
     setSearchString,
     hasFilters,
     resetFilters,
-    branchesFilter,
-    addCategoryToFilters,
-    removeCategoryFromFilters,
-    categoriesFilter,
-    addBranchesToFilters,
-    removeBranchesFromFilters,
+    branchesFilterSet,
+    categoriesFilterSet,
     error,
   } = useActivitiesFiltering();
 
@@ -45,12 +41,8 @@ export default function Activities() {
         setSearchString={setSearchString}
         hasFilters={hasFilters}
         resetFilters={resetFilters}
-        branchesFilter={branchesFilter}
-        addCategoryToFilters={addCategoryToFilters}
-        removeCategoryFromFilters={removeCategoryFromFilters}
-        categoriesFilter={categoriesFilter}
-        addBranchesToFilters={addBranchesToFilters}
-        removeBranchesFromFilters={removeBranchesFromFilters}
+        branchesFilterSet={branchesFilterSet}
+        categoriesFilterSet={categoriesFilterSet}
       />
 
       {filteredActivities.length === 0 ? (

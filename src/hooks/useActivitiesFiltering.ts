@@ -3,11 +3,12 @@ import { useState, useMemo, useCallback } from "react";
 import useActivities from "@/hooks/useActivities";
 import useCategories from "@/hooks/useCategories";
 import useFuse from "@/hooks/useFuse";
+import useSet from "@/hooks/useSet";
 
 export function useActivitiesFiltering() {
   const [searchString, setSearchString] = useState("");
-  const [branchesFilter, setBranchesFilter] = useState<string[]>([]);
-  const [categoriesFilter, setCategoriesFilter] = useState<string[]>([]);
+  const branchesFilterSet = useSet<string>();
+  const categoriesFilterSet = useSet<string>();
 
   const { activities, error: errorActivities } = useActivities();
   const { categories, error: errorCategories } = useCategories();
@@ -24,71 +25,28 @@ export function useActivitiesFiltering() {
     return searchedActivities.filter((activity) => {
       // Filter by categories
       const matchesCategories =
-        categoriesFilter.length === 0 ||
+        categoriesFilterSet.size === 0 ||
         activity.categories.some((category) =>
-          categoriesFilter.includes(category),
+          categoriesFilterSet.has(category),
         );
 
       // Filter by locations
       const matchesBranches =
-        branchesFilter.length === 0 || branchesFilter.includes(activity.branch);
+        branchesFilterSet.size === 0 || branchesFilterSet.has(activity.branch);
 
       return matchesCategories && matchesBranches;
     });
-  }, [searchedActivities, categoriesFilter, branchesFilter]);
-
-  const addCategoryToFilters = useCallback(
-    (category: string) => {
-      setCategoriesFilter((prevCategoriesFilter) => [
-        ...prevCategoriesFilter,
-        category,
-      ]);
-    },
-    [setCategoriesFilter],
-  );
-
-  const removeCategoryFromFilters = useCallback(
-    (category: string) => {
-      setCategoriesFilter((prevCategoriesFilter) =>
-        prevCategoriesFilter.filter((c) => c !== category),
-      );
-    },
-    [setCategoriesFilter],
-  );
-
-  const addBranchesToFilters = useCallback(
-    (branches: string | string[]) => {
-      setBranchesFilter((prevBranchesFilter) => {
-        const branchesToAdd = Array.isArray(branches)
-          ? branches.filter((b) => !prevBranchesFilter.includes(b))
-          : [branches];
-
-        return [...prevBranchesFilter, ...branchesToAdd];
-      });
-    },
-    [setBranchesFilter],
-  );
-
-  const removeBranchesFromFilters = useCallback(
-    (branches: string | string[]) => {
-      setBranchesFilter((prevBranchesFilter) =>
-        prevBranchesFilter.filter((b) =>
-          Array.isArray(branches) ? !branches.includes(b) : b !== branches,
-        ),
-      );
-    },
-    [setBranchesFilter],
-  );
+  }, [searchedActivities, branchesFilterSet, categoriesFilterSet]);
 
   const resetFilters = useCallback(() => {
-    setBranchesFilter([]);
-    setCategoriesFilter([]);
+    branchesFilterSet.clear();
+    categoriesFilterSet.clear();
     setSearchString("");
-  }, [setBranchesFilter, setCategoriesFilter, setSearchString]);
+  }, [branchesFilterSet, categoriesFilterSet, setSearchString]);
 
   const hasFilters =
-    branchesFilter.length > 0 ||
-    categoriesFilter.length > 0 ||
+    branchesFilterSet.size > 0 ||
+    categoriesFilterSet.size > 0 ||
     searchString.length > 0;
 
   const error = errorActivities || errorCategories;
@@ -100,12 +58,8 @@ export function useActivitiesFiltering() {
     setSearchString,
     hasFilters,
     resetFilters,
-    branchesFilter,
-    addCategoryToFilters,
-    removeCategoryFromFilters,
-    categoriesFilter,
-    addBranchesToFilters,
-    removeBranchesFromFilters,
+    branchesFilterSet,
+    categoriesFilterSet,
     error,
   };
 }

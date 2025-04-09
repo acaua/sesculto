@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { ChevronDown } from "lucide-react";
 
 import { type RegionOption } from "@/hooks/useBranches";
+import { type StatefulSet } from "@/hooks/useSet";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -14,30 +15,23 @@ import {
 
 interface BranchesFilterProps {
   regionOptions: RegionOption[];
-  selectedBranches: string[];
-  addBranchesToFilters: (branch: string | string[]) => void;
-  removeBranchesFromFilters: (branches: string | string[]) => void;
+  branchesFilterSet: StatefulSet<string>;
   handleRegionSelection: (regionName: string, isSelected: boolean) => void;
 }
 
 export function BranchesFilter({
   regionOptions,
-  selectedBranches,
-  addBranchesToFilters,
-  removeBranchesFromFilters,
+  branchesFilterSet,
   handleRegionSelection,
 }: BranchesFilterProps) {
   const regionSelectionStates = useMemo(() => {
     const stateMap = new Map();
 
     for (const region of regionOptions) {
-      const isSelected = region.branches.every((b) =>
-        selectedBranches.includes(b),
-      );
+      const isSelected = region.branches.every((b) => branchesFilterSet.has(b));
 
       const isPartiallySelected =
-        region.branches.some((b) => selectedBranches.includes(b)) &&
-        !isSelected;
+        region.branches.some((b) => branchesFilterSet.has(b)) && !isSelected;
 
       stateMap.set(region.name, {
         isSelected,
@@ -46,9 +40,7 @@ export function BranchesFilter({
     }
 
     return stateMap;
-  }, [regionOptions, selectedBranches]);
-
-  const numSelectedBranches = selectedBranches.length;
+  }, [regionOptions, branchesFilterSet]);
 
   return (
     <DropdownMenu>
@@ -59,9 +51,9 @@ export function BranchesFilter({
         >
           <div className="flex items-center gap-2">
             Unidades
-            {numSelectedBranches > 0 && (
+            {branchesFilterSet.size > 0 && (
               <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-100">
-                {numSelectedBranches}
+                {branchesFilterSet.size}
               </div>
             )}
           </div>
@@ -97,12 +89,12 @@ export function BranchesFilter({
               {region.branches.map((branch) => (
                 <DropdownMenuCheckboxItem
                   key={branch}
-                  checked={selectedBranches.includes(branch)}
+                  checked={branchesFilterSet.has(branch)}
                   onCheckedChange={(checked) => {
                     if (checked) {
-                      addBranchesToFilters(branch);
+                      branchesFilterSet.add(branch);
                     } else {
-                      removeBranchesFromFilters(branch);
+                      branchesFilterSet.delete(branch);
                     }
                   }}
                   onSelect={(event) => event.preventDefault()}

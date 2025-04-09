@@ -7,22 +7,17 @@ import {
   DropdownMenuCheckboxItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { type StatefulSet } from "@/hooks/useSet";
 
 interface CategoriesFilterProps {
   categories: string[];
-  selectedCategories: string[];
-  addCategoryToFilters: (category: string) => void;
-  removeCategoryFromFilters: (category: string) => void;
+  categoriesFilterSet: StatefulSet<string>;
 }
 
 export function CategoriesFilter({
   categories,
-  selectedCategories,
-  addCategoryToFilters,
-  removeCategoryFromFilters,
+  categoriesFilterSet,
 }: CategoriesFilterProps) {
-  const numSelectedCategories = selectedCategories.length;
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -32,9 +27,9 @@ export function CategoriesFilter({
         >
           <div className="flex items-center gap-2">
             Categorias
-            {numSelectedCategories > 0 && (
+            {categoriesFilterSet.size > 0 && (
               <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-100">
-                {numSelectedCategories}
+                {categoriesFilterSet.size}
               </div>
             )}
           </div>
@@ -45,12 +40,12 @@ export function CategoriesFilter({
         {categories.map((category) => (
           <DropdownMenuCheckboxItem
             key={category}
-            checked={selectedCategories.includes(category)}
+            checked={categoriesFilterSet.has(category)}
             onCheckedChange={(checked) => {
               if (checked) {
-                addCategoryToFilters(category);
+                categoriesFilterSet.add(category);
               } else {
-                removeCategoryFromFilters(category);
+                categoriesFilterSet.delete(category);
               }
             }}
             onSelect={(event) => event.preventDefault()}
