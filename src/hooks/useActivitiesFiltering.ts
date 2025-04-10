@@ -1,11 +1,24 @@
 import { useState, useMemo, useCallback } from "react";
 
+import type { Activity } from "@/api/activities";
 import { useActivities } from "@/hooks/useActivities";
 import { useCategories } from "@/hooks/useCategories";
 import { useFuse } from "@/hooks/useFuse";
-import { useSet } from "@/hooks/useSet";
+import { useSet, type StatefulSet } from "@/hooks/useSet";
 
-export function useActivitiesFiltering() {
+interface useActivitiesFilteringReturn {
+  activities: Activity[] | undefined;
+  filteredActivities: Activity[] | undefined;
+  categories: string[] | undefined;
+  setSearchString: (value: string) => void;
+  hasFilters: boolean;
+  resetFilters: () => void;
+  branchesFilterSet: StatefulSet<string>;
+  categoriesFilterSet: StatefulSet<string>;
+  error: Error | null;
+}
+
+export function useActivitiesFiltering(): useActivitiesFilteringReturn {
   const [searchString, setSearchString] = useState("");
   const branchesFilterSet = useSet<string>();
   const categoriesFilterSet = useSet<string>();
@@ -44,22 +57,38 @@ export function useActivitiesFiltering() {
     setSearchString("");
   }, [branchesFilterSet, categoriesFilterSet, setSearchString]);
 
-  const hasFilters =
-    branchesFilterSet.size > 0 ||
-    categoriesFilterSet.size > 0 ||
-    searchString.length > 0;
+  const hasFilters = useMemo(
+    () =>
+      branchesFilterSet.size > 0 ||
+      categoriesFilterSet.size > 0 ||
+      searchString.length > 0,
+    [branchesFilterSet.size, categoriesFilterSet.size, searchString],
+  );
 
   const error = errorActivities || errorCategories;
 
-  return {
-    activities,
-    filteredActivities,
-    categories,
-    setSearchString,
-    hasFilters,
-    resetFilters,
-    branchesFilterSet,
-    categoriesFilterSet,
-    error,
-  };
+  return useMemo(
+    () => ({
+      activities,
+      filteredActivities,
+      categories,
+      setSearchString,
+      hasFilters,
+      resetFilters,
+      branchesFilterSet,
+      categoriesFilterSet,
+      error,
+    }),
+    [
+      activities,
+      filteredActivities,
+      categories,
+      setSearchString,
+      hasFilters,
+      resetFilters,
+      branchesFilterSet,
+      categoriesFilterSet,
+      error,
+    ],
+  );
 }

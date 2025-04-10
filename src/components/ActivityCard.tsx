@@ -1,10 +1,14 @@
+import { memo } from "react";
+
 import { IMAGE_DEFAULT_SIZE, type Activity } from "@/api/activities";
 
 interface ActivityCardProps {
   activity: Activity;
 }
 
-export function ActivityCard({ activity }: ActivityCardProps) {
+export const ActivityCard = memo(function ActivityCard({
+  activity,
+}: ActivityCardProps) {
   return (
     <a
       href={`https://www.sescsp.org.br${activity.link}`}
@@ -49,4 +53,4 @@ export function ActivityCard({ activity }: ActivityCardProps) {
       </article>
     </a>
   );
-}
+});
