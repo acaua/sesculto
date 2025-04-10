@@ -8,13 +8,18 @@ export function Activities() {
   const {
     activities,
     filteredActivities,
+    allBranches,
+    regionOptions,
     categories,
+    searchString,
     setSearchString,
     hasFilters,
     resetFilters,
     branchesFilterSet,
     categoriesFilterSet,
     error,
+    handleRegionSelection,
+    handleAutocompleteSelection,
   } = useActivitiesFiltering();
 
   if (!activities || !filteredActivities || !categories) {
@@ -37,12 +42,17 @@ export function Activities() {
   return (
     <div>
       <FilterBar
+        allBranches={allBranches}
+        regionOptions={regionOptions}
         categories={categories}
+        searchString={searchString}
         setSearchString={setSearchString}
         hasFilters={hasFilters}
         resetFilters={resetFilters}
         branchesFilterSet={branchesFilterSet}
         categoriesFilterSet={categoriesFilterSet}
+        handleRegionSelection={handleRegionSelection}
+        handleAutocompleteSelection={handleAutocompleteSelection}
       />
 
       {filteredActivities.length === 0 ? (

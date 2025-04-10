@@ -66,7 +66,7 @@ export function useSet<T>(iterable?: Iterable<T>): StatefulSet<T> {
     setSet(new Set(values));
   }, []);
 
-  return useMemo(() => {
+  const statefulSet = useMemo(() => {
     return {
       size: set.size,
       has: (value: T) => set.has(value),
@@ -78,4 +78,6 @@ export function useSet<T>(iterable?: Iterable<T>): StatefulSet<T> {
       toggle,
     };
   }, [set, add, deleteValues, clear, sync, toggle]);
+
+  return statefulSet;
 }

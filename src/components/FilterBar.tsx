@@ -5,8 +5,8 @@ import { Button } from "@/components/ui/button";
 import { SearchBar } from "@/components/filterBar/SearchBar";
 import { CategoriesFilter } from "@/components/filterBar/CategoriesFilter";
 import { BranchesFilter } from "@/components/filterBar/BranchesFilter";
-import { useFilterBarState } from "@/components/filterBar/useFilterBarState";
 import { type StatefulSet } from "@/hooks/useSet";
+import { type RegionOption } from "@/hooks/useBranches";
 
 export interface FilterOption {
   value: string;
@@ -14,47 +14,43 @@ export interface FilterOption {
 }
 
 interface FilterBarProps {
+  allBranches: string[];
+  regionOptions: RegionOption[];
   categories: string[];
+  searchString: string;
   setSearchString: (searchString: string) => void;
   hasFilters: boolean;
   resetFilters: () => void;
   branchesFilterSet: StatefulSet<string>;
   categoriesFilterSet: StatefulSet<string>;
+  handleRegionSelection: (regionName: string, isSelected: boolean) => void;
+  handleAutocompleteSelection: (item: FilterOption) => void;
 }
 
 export function FilterBar({
+  allBranches,
+  regionOptions,
   categories,
+  searchString,
   setSearchString,
   hasFilters,
   resetFilters,
   branchesFilterSet,
   categoriesFilterSet,
+  handleRegionSelection,
+  handleAutocompleteSelection,
 }: FilterBarProps) {
-  const {
-    searchInputValue,
-    regionOptions,
-    allBranches,
-    handleSearchInputValueChange,
-    handleRegionSelection,
-    handleAutocompleteSelection,
-    handleImmediateSearch,
-  } = useFilterBarState({
-    setSearchString,
-    branchesFilterSet,
-    categoriesFilterSet,
-  });
-
   return (
     <div className="sticky top-0 z-10 mb-6 border-b bg-white py-4 dark:bg-gray-950">
       <div className="flex flex-col gap-3 md:flex-row">
         {/* Search Bar */}
         <SearchBar
+          searchString={searchString}
+          setSearchString={setSearchString}
           categories={categories}
-          searchInputValue={searchInputValue}
-          setSearchInputValue={handleSearchInputValueChange}
           allBranches={allBranches}
           onAutocompleteSelection={handleAutocompleteSelection}
-          onEnterPress={handleImmediateSearch}
+          // onEnterPress={handleImmediateSearch}
         />
 
         {/* Categories and Branches dropdown filters */}

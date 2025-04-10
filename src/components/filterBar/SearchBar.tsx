@@ -12,21 +12,21 @@ import {
 import type { FilterOption } from "@/components/FilterBar";
 
 interface SearchBarProps {
-  searchInputValue: string;
-  setSearchInputValue: (value: string) => void;
+  searchString: string;
+  setSearchString: (value: string) => void;
   categories: string[];
   allBranches: string[];
   onAutocompleteSelection: (item: FilterOption) => void;
-  onEnterPress: () => void;
+  // onEnterPress: () => void;
 }
 
 export function SearchBar({
+  searchString,
+  setSearchString,
   categories,
-  searchInputValue,
-  setSearchInputValue,
   allBranches,
   onAutocompleteSelection,
-  onEnterPress,
+  // onEnterPress,
 }: SearchBarProps) {
   const [showCommandK, setShowCommandK] = useState(true);
   const [open, setOpen] = useState(false);
@@ -35,9 +35,9 @@ export function SearchBar({
 
   // Filtered autocomplete suggestions
   const autocompleteSuggestions = useMemo(() => {
-    if (!searchInputValue.trim()) return [];
+    if (!searchString.trim()) return [];
 
-    const lowerSearch = searchInputValue.toLowerCase();
+    const lowerSearch = searchString.toLowerCase();
 
     const filteredCategories = categories
       .filter((category) => category.toLowerCase().includes(lowerSearch))
@@ -50,14 +50,14 @@ export function SearchBar({
       .map((branch) => ({ value: branch, type: "branch" as const }));
 
     return [...filteredCategories, ...filteredBranches];
-  }, [searchInputValue, categories, allBranches]);
+  }, [searchString, categories, allBranches]);
 
   // Show autocomplete when typing and hide when empty
   useEffect(() => {
     const hasResults =
-      !!searchInputValue.trim() && autocompleteSuggestions.length > 0;
+      !!searchString.trim() && autocompleteSuggestions.length > 0;
     setOpen(hasResults);
-  }, [searchInputValue, autocompleteSuggestions]);
+  }, [searchString, autocompleteSuggestions]);
 
   // Set up keyboard shortcuts (Cmd+K / Ctrl+K)
   useEffect(() => {
@@ -108,7 +108,7 @@ export function SearchBar({
   }, [open]);
 
   const clearSearch = () => {
-    setSearchInputValue("");
+    setSearchString("");
     setOpen(false);
   };
 
@@ -116,7 +116,7 @@ export function SearchBar({
   const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      onEnterPress();
+      // onEnterPress();
       setOpen(false);
     } else if (e.key === "Escape") {
       e.preventDefault();
@@ -132,16 +132,16 @@ export function SearchBar({
           ref={inputRef}
           className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 pr-10 pl-10 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
           placeholder="Buscar atividades, categorias ou unidades..."
-          value={searchInputValue}
-          onChange={(e) => setSearchInputValue(e.target.value)}
+          value={searchString}
+          onChange={(e) => setSearchString(e.target.value)}
           onFocus={() => {
-            if (searchInputValue.trim() && autocompleteSuggestions.length > 0) {
+            if (searchString.trim() && autocompleteSuggestions.length > 0) {
               setOpen(true);
             }
             setShowCommandK(false);
           }}
           onBlur={() => {
-            if (!searchInputValue) {
+            if (!searchString) {
               setShowCommandK(true);
             }
           }}
@@ -155,7 +155,7 @@ export function SearchBar({
           </div>
         )}
 
-        {searchInputValue && (
+        {searchString && (
           <Button
             variant="ghost"
             size="sm"
