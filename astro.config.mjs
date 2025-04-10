@@ -21,6 +21,7 @@ export default defineConfig({
     plugins: [tailwindcss()],
     resolve: {
       // TODO: remove this workaround when the bug with astro + cloudflare is fixed
+      // see: https://github.com/withastro/astro/issues/12824
       // Use react-dom/server.edge instead of react-dom/server.browser for React 19.
       // Without this, MessageChannel from node:worker_threads needs to be polyfilled.
       alias: import.meta.env.PROD
