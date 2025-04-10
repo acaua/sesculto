@@ -4,7 +4,7 @@ import { useActivitiesFiltering } from "@/hooks/useActivitiesFiltering";
 import { ActivityCard } from "@/components/ActivityCard";
 import { FilterBar } from "@/components/FilterBar";
 
-export default function Activities() {
+export function Activities() {
   const {
     activities,
     filteredActivities,

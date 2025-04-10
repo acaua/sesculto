@@ -4,10 +4,7 @@ import {
 } from "@/api/sesc/sescActivities";
 import { extractUniqueCategories } from "@/api/categories";
 
-export default async function scheduled(
-  _controller: ScheduledController,
-  env: Env,
-) {
+export async function scheduled(_controller: ScheduledController, env: Env) {
   const sescActivities = await fetchActivitiesFromSesc();
 
   const activities = sescActivities.map(sescActivityToActivity);

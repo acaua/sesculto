@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 
-import queryClient from "@/lib/queryClient";
+import { queryClient } from "@/lib/queryClient";
 import { fetchCategories } from "@/api/categories";
 
-export default function useCategories() {
+export function useCategories() {
   const {
     data: categories,
     isLoading,

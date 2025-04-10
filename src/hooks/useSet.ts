@@ -11,7 +11,7 @@ export interface StatefulSet<T> {
   toggle: (value: T) => void;
 }
 
-export default function useSet<T>(iterable?: Iterable<T>): StatefulSet<T> {
+export function useSet<T>(iterable?: Iterable<T>): StatefulSet<T> {
   const [set, setSet] = useState(() => new Set<T>(iterable));
 
   const add = useCallback(

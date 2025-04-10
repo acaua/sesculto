@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 
-import queryClient from "@/lib/queryClient";
+import { queryClient } from "@/lib/queryClient";
 import { fetchActivities } from "@/api/activities";
 
-export default function useActivities() {
+export function useActivities() {
   const {
     data: activities,
     isLoading,

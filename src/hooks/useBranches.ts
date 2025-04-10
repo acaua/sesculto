@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 
-import queryClient from "@/lib/queryClient";
+import { queryClient } from "@/lib/queryClient";
 import {
   fetchBranches,
   Region,

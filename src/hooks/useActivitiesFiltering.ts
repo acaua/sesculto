@@ -1,9 +1,9 @@
 import { useState, useMemo, useCallback } from "react";
 
-import useActivities from "@/hooks/useActivities";
-import useCategories from "@/hooks/useCategories";
-import useFuse from "@/hooks/useFuse";
-import useSet from "@/hooks/useSet";
+import { useActivities } from "@/hooks/useActivities";
+import { useCategories } from "@/hooks/useCategories";
+import { useFuse } from "@/hooks/useFuse";
+import { useSet } from "@/hooks/useSet";
 
 export function useActivitiesFiltering() {
   const [searchString, setSearchString] = useState("");

@@ -7,7 +7,7 @@ const defaultOptions = {
   ignoreLocation: true,
 };
 
-export default function useFuse<T>(
+export function useFuse<T>(
   list: ReadonlyArray<T> | undefined,
   searchString: string,
   fuseOptions?: IFuseOptions<T>,
