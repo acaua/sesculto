@@ -13,6 +13,7 @@ export function Activities() {
     categories,
     searchString,
     setSearchString,
+    flushSearchString,
     hasFilters,
     resetFilters,
     branchesFilterSet,
@@ -47,6 +48,7 @@ export function Activities() {
         categories={categories}
         searchString={searchString}
         setSearchString={setSearchString}
+        flushSearchString={flushSearchString}
         hasFilters={hasFilters}
         resetFilters={resetFilters}
         branchesFilterSet={branchesFilterSet}

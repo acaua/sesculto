@@ -19,6 +19,7 @@ interface FilterBarProps {
   categories: string[];
   searchString: string;
   setSearchString: (searchString: string) => void;
+  flushSearchString: () => void;
   hasFilters: boolean;
   resetFilters: () => void;
   branchesFilterSet: StatefulSet<string>;
@@ -33,6 +34,7 @@ export function FilterBar({
   categories,
   searchString,
   setSearchString,
+  flushSearchString,
   hasFilters,
   resetFilters,
   branchesFilterSet,
@@ -50,7 +52,7 @@ export function FilterBar({
           categories={categories}
           allBranches={allBranches}
           onAutocompleteSelection={handleAutocompleteSelection}
-          // onEnterPress={handleImmediateSearch}
+          onEnterPress={flushSearchString}
         />
 
         {/* Categories and Branches dropdown filters */}

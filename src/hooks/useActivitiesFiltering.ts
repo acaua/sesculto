@@ -1,12 +1,13 @@
 import { useState, useMemo, useCallback } from "react";
 
+import type { FilterOption } from "@/components/FilterBar";
 import type { Activity } from "@/api/activities";
 import { useActivities } from "@/hooks/useActivities";
 import { useBranches, type RegionOption } from "@/hooks/useBranches";
 import { useCategories } from "@/hooks/useCategories";
 import { useFuse } from "@/hooks/useFuse";
 import { useSet, type StatefulSet } from "@/hooks/useSet";
-import type { FilterOption } from "@/components/FilterBar";
+import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 
 interface useActivitiesFilteringReturn {
   activities: Activity[] | undefined;
@@ -16,6 +17,7 @@ interface useActivitiesFilteringReturn {
   categories: string[] | undefined;
   searchString: string;
   setSearchString: (value: string) => void;
+  flushSearchString: () => void;
   hasFilters: boolean;
   resetFilters: () => void;
   branchesFilterSet: StatefulSet<string>;
@@ -30,13 +32,16 @@ export function useActivitiesFiltering(): useActivitiesFilteringReturn {
   const branchesFilterSet = useSet<string>();
   const categoriesFilterSet = useSet<string>();
 
+  const [debouncedSearchString, { flush: flushSearchString }] =
+    useDebouncedValue(searchString, 500);
+
   const { activities, error: errorActivities } = useActivities();
   const { regionOptions, allBranches, error: errorBranches } = useBranches();
   const { categories, error: errorCategories } = useCategories();
 
   const { filteredList: searchedActivities } = useFuse(
     activities,
-    searchString,
+    debouncedSearchString,
     { keys: ["title", "details"] },
   );
 
@@ -63,7 +68,13 @@ export function useActivitiesFiltering(): useActivitiesFilteringReturn {
     branchesFilterSet.clear();
     categoriesFilterSet.clear();
     setSearchString("");
-  }, [branchesFilterSet, categoriesFilterSet, setSearchString]);
+    flushSearchString();
+  }, [
+    branchesFilterSet,
+    categoriesFilterSet,
+    setSearchString,
+    flushSearchString,
+  ]);
 
   const hasFilters = useMemo(
     () =>
@@ -96,8 +107,16 @@ export function useActivitiesFiltering(): useActivitiesFilteringReturn {
       } else {
         branchesFilterSet.add(item.value);
       }
+
+      setSearchString("");
+      flushSearchString();
     },
-    [branchesFilterSet, categoriesFilterSet],
+    [
+      branchesFilterSet,
+      categoriesFilterSet,
+      setSearchString,
+      flushSearchString,
+    ],
   );
 
   return {
@@ -108,6 +127,7 @@ export function useActivitiesFiltering(): useActivitiesFilteringReturn {
     categories,
     searchString,
     setSearchString,
+    flushSearchString,
     hasFilters,
     resetFilters,
     branchesFilterSet,

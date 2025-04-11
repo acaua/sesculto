@@ -17,7 +17,7 @@ interface SearchBarProps {
   categories: string[];
   allBranches: string[];
   onAutocompleteSelection: (item: FilterOption) => void;
-  // onEnterPress: () => void;
+  onEnterPress: () => void;
 }
 
 export function SearchBar({
@@ -26,7 +26,7 @@ export function SearchBar({
   categories,
   allBranches,
   onAutocompleteSelection,
-  // onEnterPress,
+  onEnterPress,
 }: SearchBarProps) {
   const [showCommandK, setShowCommandK] = useState(true);
   const [open, setOpen] = useState(false);
@@ -116,7 +116,7 @@ export function SearchBar({
   const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      // onEnterPress();
+      onEnterPress();
       setOpen(false);
     } else if (e.key === "Escape") {
       e.preventDefault();
