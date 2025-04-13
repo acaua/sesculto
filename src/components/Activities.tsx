@@ -8,8 +8,7 @@ export function Activities() {
   const {
     activities,
     filteredActivities,
-    allBranches,
-    regionOptions,
+    branchesByRegion,
     categories,
     searchString,
     setSearchString,
@@ -23,7 +22,7 @@ export function Activities() {
     handleAutocompleteSelection,
   } = useActivitiesFiltering();
 
-  if (!activities || !filteredActivities || !categories) {
+  if (!activities || !filteredActivities || !categories || !branchesByRegion) {
     return (
       <div className="flex h-64 items-center justify-center">
         <Loader2 className="text-primary h-8 w-8 animate-spin" />
@@ -43,8 +42,7 @@ export function Activities() {
   return (
     <div>
       <FilterBar
-        allBranches={allBranches}
-        regionOptions={regionOptions}
+        branchesByRegion={branchesByRegion}
         categories={categories}
         searchString={searchString}
         setSearchString={setSearchString}

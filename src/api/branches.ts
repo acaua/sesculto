@@ -1,26 +1,10 @@
-export interface Branch {
-  groupName: string;
-  groupType: string;
-  groupID: string;
-  groupLink: string;
-  doc_count: number;
-}
+export const REGIONS = ["capital", "interior", "litoral"] as const;
 
-export enum Region {
-  CAPITAL = "capital",
-  INTERIOR = "interior",
-  LITORAL = "litoral",
-}
+export type Region = (typeof REGIONS)[number];
 
-export interface BranchesByRegion {
-  [Region.CAPITAL]: Branch[];
-  [Region.INTERIOR]: Branch[];
-  [Region.LITORAL]: Branch[];
-}
-
-interface ApiResponse {
-  unidades: BranchesByRegion;
-}
+export type BranchesByRegion = {
+  [K in Region]: string[];
+};
 
 export const fetchBranches = async (): Promise<BranchesByRegion> => {
   const response = await fetch("https://sescontent.acaua.dev/branches.json");
@@ -28,7 +12,7 @@ export const fetchBranches = async (): Promise<BranchesByRegion> => {
     throw new Error("Failed to fetch branches");
   }
 
-  const jsonResponse: ApiResponse = await response.json();
+  const branchesByRegion: BranchesByRegion = await response.json();
 
-  return jsonResponse.unidades;
+  return branchesByRegion;
 };

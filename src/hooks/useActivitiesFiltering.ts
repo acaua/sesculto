@@ -2,8 +2,9 @@ import { useState, useMemo, useCallback } from "react";
 
 import type { FilterOption } from "@/components/FilterBar";
 import type { Activity } from "@/api/activities";
+import type { BranchesByRegion, Region } from "@/api/branches";
 import { useActivities } from "@/hooks/useActivities";
-import { useBranches, type RegionOption } from "@/hooks/useBranches";
+import { useBranches } from "@/hooks/useBranches";
 import { useCategories } from "@/hooks/useCategories";
 import { useFuse } from "@/hooks/useFuse";
 import { useSet, type StatefulSet } from "@/hooks/useSet";
@@ -12,8 +13,7 @@ import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 interface useActivitiesFilteringReturn {
   activities: Activity[] | undefined;
   filteredActivities: Activity[] | undefined;
-  allBranches: string[];
-  regionOptions: RegionOption[];
+  branchesByRegion: BranchesByRegion | undefined;
   categories: string[] | undefined;
   searchString: string;
   setSearchString: (value: string) => void;
@@ -23,7 +23,7 @@ interface useActivitiesFilteringReturn {
   branchesFilterSet: StatefulSet<string>;
   categoriesFilterSet: StatefulSet<string>;
   error: Error | null;
-  handleRegionSelection: (regionName: string, isSelected: boolean) => void;
+  handleRegionSelection: (regionName: Region, isSelected: boolean) => void;
   handleAutocompleteSelection: (item: FilterOption) => void;
 }
 
@@ -36,7 +36,7 @@ export function useActivitiesFiltering(): useActivitiesFilteringReturn {
     useDebouncedValue(searchString, 500);
 
   const { activities, error: errorActivities } = useActivities();
-  const { regionOptions, allBranches, error: errorBranches } = useBranches();
+  const { branchesByRegion, error: errorBranches } = useBranches();
   const { categories, error: errorCategories } = useCategories();
 
   const { filteredList: searchedActivities } = useFuse(
@@ -87,17 +87,16 @@ export function useActivitiesFiltering(): useActivitiesFilteringReturn {
   const error = errorActivities || errorCategories || errorBranches;
 
   const handleRegionSelection = useCallback(
-    (regionName: string, isSelected: boolean) => {
-      const region = regionOptions.find((r) => r.name === regionName);
-      if (!region) return;
+    (region: Region, isSelected: boolean) => {
+      if (!branchesByRegion) return;
 
       if (isSelected) {
-        branchesFilterSet.add(region.branches);
+        branchesFilterSet.add(branchesByRegion[region]);
       } else {
-        branchesFilterSet.delete(region.branches);
+        branchesFilterSet.delete(branchesByRegion[region]);
       }
     },
-    [regionOptions, branchesFilterSet],
+    [branchesByRegion, branchesFilterSet],
   );
 
   const handleAutocompleteSelection = useCallback(
@@ -122,8 +121,7 @@ export function useActivitiesFiltering(): useActivitiesFilteringReturn {
   return {
     activities,
     filteredActivities,
-    allBranches,
-    regionOptions,
+    branchesByRegion,
     categories,
     searchString,
     setSearchString,

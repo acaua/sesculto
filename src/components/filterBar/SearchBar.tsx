@@ -10,12 +10,13 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import type { FilterOption } from "@/components/FilterBar";
+import type { BranchesByRegion } from "@/api/branches";
 
 interface SearchBarProps {
   searchString: string;
   setSearchString: (value: string) => void;
   categories: string[];
-  allBranches: string[];
+  branchesByRegion: BranchesByRegion;
   onAutocompleteSelection: (item: FilterOption) => void;
   onEnterPress: () => void;
 }
@@ -24,7 +25,7 @@ export function SearchBar({
   searchString,
   setSearchString,
   categories,
-  allBranches,
+  branchesByRegion,
   onAutocompleteSelection,
   onEnterPress,
 }: SearchBarProps) {
@@ -32,6 +33,10 @@ export function SearchBar({
   const [open, setOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const commandRef = useRef<HTMLDivElement>(null);
+
+  const allBranches = useMemo(() => {
+    return Object.values(branchesByRegion).flat();
+  }, [branchesByRegion]);
 
   // Filtered autocomplete suggestions
   const autocompleteSuggestions = useMemo(() => {

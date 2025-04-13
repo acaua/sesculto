@@ -1,30 +1,13 @@
-import {
-  fetchActivitiesFromSesc,
-  sescActivityToActivity,
-} from "@/api/sesc/sescActivities";
-import { extractUniqueCategories } from "@/api/categories";
+import { updateActivitiesAndCategories } from "@/cloudflare/updateActivitiesAndCategories";
+import { updateBranches } from "@/cloudflare/updateBranches";
 
-export async function scheduled(_controller: ScheduledController, env: Env) {
-  const sescActivities = await fetchActivitiesFromSesc();
-
-  const activities = sescActivities.map(sescActivityToActivity);
-
-  const categories = extractUniqueCategories(activities);
-
-  const options = {
-    httpMetadata: {
-      contentType: "application/json",
-    },
-  };
-
-  await env.SESCONTENT_BUCKET.put(
-    "activities.json",
-    JSON.stringify(activities),
-    options,
-  );
-  await env.SESCONTENT_BUCKET.put(
-    "categories.json",
-    JSON.stringify(categories),
-    options,
-  );
+export async function scheduled(controller: ScheduledController, env: Env) {
+  switch (controller.cron) {
+    case "2 * * * *":
+      await updateActivitiesAndCategories(env);
+      break;
+    case "1 * * * 1":
+      await updateBranches(env);
+      break;
+  }
 }

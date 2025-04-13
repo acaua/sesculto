@@ -5,8 +5,8 @@ import { Button } from "@/components/ui/button";
 import { SearchBar } from "@/components/filterBar/SearchBar";
 import { CategoriesFilter } from "@/components/filterBar/CategoriesFilter";
 import { BranchesFilter } from "@/components/filterBar/BranchesFilter";
-import { type StatefulSet } from "@/hooks/useSet";
-import { type RegionOption } from "@/hooks/useBranches";
+import type { StatefulSet } from "@/hooks/useSet";
+import type { BranchesByRegion, Region } from "@/api/branches";
 
 export interface FilterOption {
   value: string;
@@ -14,8 +14,7 @@ export interface FilterOption {
 }
 
 interface FilterBarProps {
-  allBranches: string[];
-  regionOptions: RegionOption[];
+  branchesByRegion: BranchesByRegion;
   categories: string[];
   searchString: string;
   setSearchString: (searchString: string) => void;
@@ -24,13 +23,12 @@ interface FilterBarProps {
   resetFilters: () => void;
   branchesFilterSet: StatefulSet<string>;
   categoriesFilterSet: StatefulSet<string>;
-  handleRegionSelection: (regionName: string, isSelected: boolean) => void;
+  handleRegionSelection: (regionName: Region, isSelected: boolean) => void;
   handleAutocompleteSelection: (item: FilterOption) => void;
 }
 
 export function FilterBar({
-  allBranches,
-  regionOptions,
+  branchesByRegion,
   categories,
   searchString,
   setSearchString,
@@ -50,7 +48,7 @@ export function FilterBar({
           searchString={searchString}
           setSearchString={setSearchString}
           categories={categories}
-          allBranches={allBranches}
+          branchesByRegion={branchesByRegion}
           onAutocompleteSelection={handleAutocompleteSelection}
           onEnterPress={flushSearchString}
         />
@@ -63,7 +61,7 @@ export function FilterBar({
           />
 
           <BranchesFilter
-            regionOptions={regionOptions}
+            branchesByRegion={branchesByRegion}
             branchesFilterSet={branchesFilterSet}
             handleRegionSelection={handleRegionSelection}
           />

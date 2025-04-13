@@ -1,9 +1,11 @@
 import { useMemo } from "react";
 import { ChevronDown } from "lucide-react";
 
-import { type RegionOption } from "@/hooks/useBranches";
+import { cn } from "@/lib/utils";
 import { type StatefulSet } from "@/hooks/useSet";
 import { Button } from "@/components/ui/button";
+import { REGIONS, type BranchesByRegion, type Region } from "@/api/branches";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,33 +16,33 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 interface BranchesFilterProps {
-  regionOptions: RegionOption[];
+  branchesByRegion: BranchesByRegion;
   branchesFilterSet: StatefulSet<string>;
-  handleRegionSelection: (regionName: string, isSelected: boolean) => void;
+  handleRegionSelection: (regionName: Region, isSelected: boolean) => void;
 }
 
 export function BranchesFilter({
-  regionOptions,
+  branchesByRegion,
   branchesFilterSet,
   handleRegionSelection,
 }: BranchesFilterProps) {
   const regionSelectionStates = useMemo(() => {
     const stateMap = new Map();
 
-    for (const region of regionOptions) {
-      const isSelected = region.branches.every((b) => branchesFilterSet.has(b));
+    for (const [region, branches] of Object.entries(branchesByRegion)) {
+      const isSelected = branches.every((b) => branchesFilterSet.has(b));
 
       const isPartiallySelected =
-        region.branches.some((b) => branchesFilterSet.has(b)) && !isSelected;
+        branches.some((b) => branchesFilterSet.has(b)) && !isSelected;
 
-      stateMap.set(region.name, {
+      stateMap.set(region, {
         isSelected,
         isPartiallySelected,
       });
     }
 
     return stateMap;
-  }, [regionOptions, branchesFilterSet]);
+  }, [branchesByRegion, branchesFilterSet]);
 
   return (
     <DropdownMenu>
@@ -61,32 +63,33 @@ export function BranchesFilter({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="max-h-80 w-56 overflow-auto">
-        {regionOptions.map((region, index) => {
-          const regionState = regionSelectionStates.get(region.name) || {
+        {REGIONS.map((region, index) => {
+          const regionState = regionSelectionStates.get(region) || {
             isSelected: false,
             isPartiallySelected: false,
           };
 
           return (
-            <div key={region.name}>
+            <div key={region}>
               <DropdownMenuLabel className="font-bold">
                 <DropdownMenuCheckboxItem
                   checked={regionState.isSelected}
                   onCheckedChange={(checked) => {
-                    handleRegionSelection(region.name, checked);
+                    handleRegionSelection(region, checked);
                   }}
                   onSelect={(event) => event.preventDefault()}
-                  className={
+                  className={cn(
+                    "capitalize",
                     regionState.isPartiallySelected
                       ? "bg-gray-100 dark:bg-gray-800"
-                      : ""
-                  }
+                      : "",
+                  )}
                 >
-                  {region.name}
+                  {region}
                 </DropdownMenuCheckboxItem>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              {region.branches.map((branch) => (
+              {branchesByRegion[region].map((branch) => (
                 <DropdownMenuCheckboxItem
                   key={branch}
                   checked={branchesFilterSet.has(branch)}
@@ -102,7 +105,9 @@ export function BranchesFilter({
                   {branch}
                 </DropdownMenuCheckboxItem>
               ))}
-              {index !== regionOptions.length - 1 && <DropdownMenuSeparator />}
+              {index !== branchesByRegion[region].length - 1 && (
+                <DropdownMenuSeparator />
+              )}
             </div>
           );
         })}
