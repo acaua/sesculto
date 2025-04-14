@@ -15,10 +15,9 @@ export function Activities() {
     flushSearchString,
     hasFilters,
     resetFilters,
-    branchesFilterSet,
+    branchesFilter,
     categoriesFilterSet,
     error,
-    handleRegionSelection,
     handleAutocompleteSelection,
   } = useActivitiesFiltering();
 
@@ -49,9 +48,8 @@ export function Activities() {
         flushSearchString={flushSearchString}
         hasFilters={hasFilters}
         resetFilters={resetFilters}
-        branchesFilterSet={branchesFilterSet}
+        branchesFilter={branchesFilter}
         categoriesFilterSet={categoriesFilterSet}
-        handleRegionSelection={handleRegionSelection}
         handleAutocompleteSelection={handleAutocompleteSelection}
       />
 

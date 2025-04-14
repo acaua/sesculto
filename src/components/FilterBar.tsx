@@ -6,6 +6,7 @@ import { SearchBar } from "@/components/filterBar/SearchBar";
 import { CategoriesFilter } from "@/components/filterBar/CategoriesFilter";
 import { BranchesFilter } from "@/components/filterBar/BranchesFilter";
 import type { StatefulSet } from "@/hooks/useSet";
+import type { GroupedFilter } from "@/hooks/useGroupedFilter";
 import type { BranchesByRegion, Region } from "@/api/branches";
 
 export interface FilterOption {
@@ -21,9 +22,8 @@ interface FilterBarProps {
   flushSearchString: () => void;
   hasFilters: boolean;
   resetFilters: () => void;
-  branchesFilterSet: StatefulSet<string>;
+  branchesFilter: GroupedFilter<Region>;
   categoriesFilterSet: StatefulSet<string>;
-  handleRegionSelection: (regionName: Region, isSelected: boolean) => void;
   handleAutocompleteSelection: (item: FilterOption) => void;
 }
 
@@ -35,9 +35,8 @@ export function FilterBar({
   flushSearchString,
   hasFilters,
   resetFilters,
-  branchesFilterSet,
+  branchesFilter,
   categoriesFilterSet,
-  handleRegionSelection,
   handleAutocompleteSelection,
 }: FilterBarProps) {
   return (
@@ -62,8 +61,7 @@ export function FilterBar({
 
           <BranchesFilter
             branchesByRegion={branchesByRegion}
-            branchesFilterSet={branchesFilterSet}
-            handleRegionSelection={handleRegionSelection}
+            branchesFilter={branchesFilter}
           />
         </div>
       </div>

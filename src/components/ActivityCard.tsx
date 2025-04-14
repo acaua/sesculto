@@ -21,7 +21,7 @@ export const ActivityCard = memo(function ActivityCard({
           alt={activity.title}
           width={IMAGE_DEFAULT_SIZE.width}
           height={IMAGE_DEFAULT_SIZE.height}
-          className="w-full"
+          className="aspect-[2/1] w-full object-cover"
           loading="lazy"
         />
         <div className="flex h-full flex-col gap-4 p-5 pt-4">

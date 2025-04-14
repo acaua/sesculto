@@ -14,36 +14,30 @@ export interface StatefulSet<T> {
 export function useSet<T>(iterable?: Iterable<T>): StatefulSet<T> {
   const [set, setSet] = useState(() => new Set<T>(iterable));
 
-  const add = useCallback(
-    (values: T | T[]) => {
-      setSet((prev) => {
-        const copy = new Set(prev);
-        // Handle both cases (array or single value)
-        const valuesToAdd = Array.isArray(values) ? values : [values];
-        for (const value of valuesToAdd) {
-          copy.add(value);
-        }
-        return copy;
-      });
-    },
-    [setSet],
-  );
+  const add = useCallback((values: T | T[]) => {
+    setSet((prev) => {
+      const copy = new Set(prev);
+      // Handle both cases (array or single value)
+      const valuesToAdd = Array.isArray(values) ? values : [values];
+      for (const value of valuesToAdd) {
+        copy.add(value);
+      }
+      return copy;
+    });
+  }, []);
 
-  const deleteValues = useCallback(
-    (values: T | T[]) => {
-      setSet((prev) => {
-        const copy = new Set(prev);
+  const deleteValues = useCallback((values: T | T[]) => {
+    setSet((prev) => {
+      const copy = new Set(prev);
 
-        const valuesToDelete = Array.isArray(values) ? values : [values];
-        for (const value of valuesToDelete) {
-          copy.delete(value);
-        }
+      const valuesToDelete = Array.isArray(values) ? values : [values];
+      for (const value of valuesToDelete) {
+        copy.delete(value);
+      }
 
-        return copy;
-      });
-    },
-    [setSet],
-  );
+      return copy;
+    });
+  }, []);
 
   const toggle = useCallback((value: T) => {
     setSet((prev) => {

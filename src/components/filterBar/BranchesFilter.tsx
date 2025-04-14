@@ -1,11 +1,6 @@
-import { useMemo } from "react";
 import { ChevronDown } from "lucide-react";
 
-import { cn } from "@/lib/utils";
-import { type StatefulSet } from "@/hooks/useSet";
 import { Button } from "@/components/ui/button";
-import { REGIONS, type BranchesByRegion, type Region } from "@/api/branches";
-
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,35 +10,22 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 
+import { cn } from "@/lib/utils";
+import {
+  type GroupedFilter,
+  GroupSelectionState,
+} from "@/hooks/useGroupedFilter";
+import { REGIONS, type BranchesByRegion, type Region } from "@/api/branches";
+
 interface BranchesFilterProps {
   branchesByRegion: BranchesByRegion;
-  branchesFilterSet: StatefulSet<string>;
-  handleRegionSelection: (regionName: Region, isSelected: boolean) => void;
+  branchesFilter: GroupedFilter<Region>;
 }
 
 export function BranchesFilter({
   branchesByRegion,
-  branchesFilterSet,
-  handleRegionSelection,
+  branchesFilter,
 }: BranchesFilterProps) {
-  const regionSelectionStates = useMemo(() => {
-    const stateMap = new Map();
-
-    for (const [region, branches] of Object.entries(branchesByRegion)) {
-      const isSelected = branches.every((b) => branchesFilterSet.has(b));
-
-      const isPartiallySelected =
-        branches.some((b) => branchesFilterSet.has(b)) && !isSelected;
-
-      stateMap.set(region, {
-        isSelected,
-        isPartiallySelected,
-      });
-    }
-
-    return stateMap;
-  }, [branchesByRegion, branchesFilterSet]);
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -53,9 +35,9 @@ export function BranchesFilter({
         >
           <div className="flex items-center gap-2">
             Unidades
-            {branchesFilterSet.size > 0 && (
+            {branchesFilter.hasFilter && (
               <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-100">
-                {branchesFilterSet.size}
+                {branchesFilter.size}
               </div>
             )}
           </div>
@@ -64,23 +46,19 @@ export function BranchesFilter({
       </DropdownMenuTrigger>
       <DropdownMenuContent className="max-h-80 w-56 overflow-auto">
         {REGIONS.map((region, index) => {
-          const regionState = regionSelectionStates.get(region) || {
-            isSelected: false,
-            isPartiallySelected: false,
-          };
+          const regionState = branchesFilter.groupStates[region];
 
           return (
             <div key={region}>
               <DropdownMenuLabel className="font-bold">
                 <DropdownMenuCheckboxItem
-                  checked={regionState.isSelected}
-                  onCheckedChange={(checked) => {
-                    handleRegionSelection(region, checked);
-                  }}
+                  checked={regionState === GroupSelectionState.FullySelected}
+                  onCheckedChange={() => branchesFilter.toggleGroup(region)}
+                  // prevent closing on select
                   onSelect={(event) => event.preventDefault()}
                   className={cn(
                     "capitalize",
-                    regionState.isPartiallySelected
+                    regionState === GroupSelectionState.PartiallySelected
                       ? "bg-gray-100 dark:bg-gray-800"
                       : "",
                   )}
@@ -92,14 +70,9 @@ export function BranchesFilter({
               {branchesByRegion[region].map((branch) => (
                 <DropdownMenuCheckboxItem
                   key={branch}
-                  checked={branchesFilterSet.has(branch)}
-                  onCheckedChange={(checked) => {
-                    if (checked) {
-                      branchesFilterSet.add(branch);
-                    } else {
-                      branchesFilterSet.delete(branch);
-                    }
-                  }}
+                  checked={branchesFilter.has(branch)}
+                  onCheckedChange={() => branchesFilter.toggleItem(branch)}
+                  // prevent closing on select
                   onSelect={(event) => event.preventDefault()}
                 >
                   {branch}

@@ -8,6 +8,7 @@ import { useBranches } from "@/hooks/useBranches";
 import { useCategories } from "@/hooks/useCategories";
 import { useFuse } from "@/hooks/useFuse";
 import { useSet, type StatefulSet } from "@/hooks/useSet";
+import { useGroupedFilter, type GroupedFilter } from "@/hooks/useGroupedFilter";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 
 interface useActivitiesFilteringReturn {
@@ -20,24 +21,23 @@ interface useActivitiesFilteringReturn {
   flushSearchString: () => void;
   hasFilters: boolean;
   resetFilters: () => void;
-  branchesFilterSet: StatefulSet<string>;
   categoriesFilterSet: StatefulSet<string>;
+  branchesFilter: GroupedFilter<Region>;
   error: Error | null;
-  handleRegionSelection: (regionName: Region, isSelected: boolean) => void;
   handleAutocompleteSelection: (item: FilterOption) => void;
 }
 
 export function useActivitiesFiltering(): useActivitiesFilteringReturn {
-  const [searchString, setSearchString] = useState("");
-  const branchesFilterSet = useSet<string>();
-  const categoriesFilterSet = useSet<string>();
-
-  const [debouncedSearchString, { flush: flushSearchString }] =
-    useDebouncedValue(searchString, 500);
-
   const { activities, error: errorActivities } = useActivities();
   const { branchesByRegion, error: errorBranches } = useBranches();
   const { categories, error: errorCategories } = useCategories();
+
+  const [searchString, setSearchString] = useState("");
+  const [debouncedSearchString, { flush: flushSearchString }] =
+    useDebouncedValue(searchString, 500);
+
+  const branchesFilter = useGroupedFilter<Region>(branchesByRegion);
+  const categoriesFilterSet = useSet<string>();
 
   const { filteredList: searchedActivities } = useFuse(
     activities,
@@ -49,73 +49,46 @@ export function useActivitiesFiltering(): useActivitiesFilteringReturn {
     if (!searchedActivities) return undefined;
 
     return searchedActivities.filter((activity) => {
-      // Filter by categories
+      const matchesBranches =
+        !branchesFilter.hasFilter || branchesFilter.has(activity.branch);
+
       const matchesCategories =
         categoriesFilterSet.size === 0 ||
         activity.categories.some((category) =>
           categoriesFilterSet.has(category),
         );
 
-      // Filter by locations
-      const matchesBranches =
-        branchesFilterSet.size === 0 || branchesFilterSet.has(activity.branch);
-
       return matchesCategories && matchesBranches;
     });
-  }, [searchedActivities, branchesFilterSet, categoriesFilterSet]);
+  }, [searchedActivities, branchesFilter, categoriesFilterSet]);
 
   const resetFilters = useCallback(() => {
-    branchesFilterSet.clear();
+    branchesFilter.clear();
     categoriesFilterSet.clear();
     setSearchString("");
     flushSearchString();
-  }, [
-    branchesFilterSet,
-    categoriesFilterSet,
-    setSearchString,
-    flushSearchString,
-  ]);
+  }, [branchesFilter, categoriesFilterSet, setSearchString, flushSearchString]);
 
-  const hasFilters = useMemo(
-    () =>
-      branchesFilterSet.size > 0 ||
-      categoriesFilterSet.size > 0 ||
-      searchString.length > 0,
-    [branchesFilterSet.size, categoriesFilterSet.size, searchString],
-  );
+  const hasFilters =
+    branchesFilter.hasFilter ||
+    categoriesFilterSet.size > 0 ||
+    searchString.length > 0;
 
   const error = errorActivities || errorCategories || errorBranches;
-
-  const handleRegionSelection = useCallback(
-    (region: Region, isSelected: boolean) => {
-      if (!branchesByRegion) return;
-
-      if (isSelected) {
-        branchesFilterSet.add(branchesByRegion[region]);
-      } else {
-        branchesFilterSet.delete(branchesByRegion[region]);
-      }
-    },
-    [branchesByRegion, branchesFilterSet],
-  );
 
   const handleAutocompleteSelection = useCallback(
     (item: FilterOption) => {
       if (item.type === "category") {
         categoriesFilterSet.add(item.value);
       } else {
-        branchesFilterSet.add(item.value);
+        // Use toggleItem for branch selection
+        branchesFilter.toggleItem(item.value);
       }
 
       setSearchString("");
       flushSearchString();
     },
-    [
-      branchesFilterSet,
-      categoriesFilterSet,
-      setSearchString,
-      flushSearchString,
-    ],
+    [branchesFilter, categoriesFilterSet, setSearchString, flushSearchString],
   );
 
   return {
@@ -128,10 +101,9 @@ export function useActivitiesFiltering(): useActivitiesFilteringReturn {
     flushSearchString,
     hasFilters,
     resetFilters,
-    branchesFilterSet,
     categoriesFilterSet,
+    branchesFilter,
     error,
-    handleRegionSelection,
     handleAutocompleteSelection,
   };
 }
