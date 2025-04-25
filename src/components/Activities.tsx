@@ -1,8 +1,61 @@
+import { memo } from "react";
 import { Loader2 } from "lucide-react";
 
-import { useActivitiesFiltering } from "@/hooks/useActivitiesFiltering";
 import { ActivityCard } from "@/components/ActivityCard";
 import { FilterBar } from "@/components/FilterBar";
+import { useActivitiesFiltering } from "@/hooks/useActivitiesFiltering";
+import type { Activity } from "@/api/activities";
+
+const ActivitiesCount = memo<{
+  filteredCount: number;
+  totalCount: number;
+}>(({ filteredCount, totalCount }) => (
+  <p className="mb-4 text-gray-500" role="status">
+    {filteredCount < totalCount
+      ? `${filteredCount} de ${totalCount} atividades encontradas`
+      : `${totalCount} atividades encontradas`}
+  </p>
+));
+
+const NoResults = memo(() => (
+  <div className="py-12 text-center">
+    <p className="text-xl text-gray-500">
+      Nenhuma atividade encontrada com os filtros selecionados.
+    </p>
+  </div>
+));
+
+const ActivityGrid = memo<{ activities: Activity[] }>(({ activities }) => (
+  <div
+    className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+    role="list"
+    aria-label="Lista de atividades"
+  >
+    {activities.map((activity) => (
+      <div key={activity.id} role="listitem">
+        <ActivityCard activity={activity} />
+      </div>
+    ))}
+  </div>
+));
+
+const LoadingState = () => (
+  <div className="flex h-64 items-center justify-center" aria-live="polite">
+    <Loader2 className="text-primary h-8 w-8 animate-spin" aria-hidden="true" />
+    <span className="ml-2">Carregando atividades...</span>
+  </div>
+);
+
+const ErrorState = () => (
+  <div
+    className="flex h-64 flex-col items-center justify-center text-red-500"
+    aria-live="assertive"
+  >
+    <p>
+      Erro ao carregar as atividades. Por favor, tente novamente mais tarde.
+    </p>
+  </div>
+);
 
 export function Activities() {
   const {
@@ -21,25 +74,16 @@ export function Activities() {
     handleAutocompleteSelection,
   } = useActivitiesFiltering();
 
-  if (!activities || !filteredActivities || !categories || !branchesByRegion) {
-    return (
-      <div className="flex h-64 items-center justify-center">
-        <Loader2 className="text-primary h-8 w-8 animate-spin" />
-        <span className="ml-2">Carregando atividades...</span>
-      </div>
-    );
+  if (error) {
+    return <ErrorState />;
   }
 
-  if (error) {
-    return (
-      <div className="flex h-64 items-center justify-center text-red-500">
-        Erro ao carregar as atividades. Por favor, tente novamente mais tarde.
-      </div>
-    );
+  if (!activities || !filteredActivities || !categories || !branchesByRegion) {
+    return <LoadingState />;
   }
 
   return (
-    <div>
+    <div role="main" aria-label="Atividades SESC">
       <FilterBar
         branchesByRegion={branchesByRegion}
         categories={categories}
@@ -53,26 +97,18 @@ export function Activities() {
         handleAutocompleteSelection={handleAutocompleteSelection}
       />
 
-      {filteredActivities.length === 0 ? (
-        <div className="py-12 text-center">
-          <p className="text-xl text-gray-500">
-            Nenhuma atividade encontrada com os filtros selecionados.
-          </p>
-        </div>
-      ) : (
-        <div>
-          <p className="mb-4 text-gray-500">
-            {filteredActivities.length < activities.length &&
-              `${filteredActivities.length} de `}
-            {activities.length} atividades encontradas
-          </p>
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {filteredActivities.map((activity) => (
-              <ActivityCard key={activity.id} activity={activity} />
-            ))}
-          </div>
-        </div>
-      )}
+      <div aria-live="polite">
+        <ActivitiesCount
+          filteredCount={filteredActivities.length}
+          totalCount={activities.length}
+        />
+
+        {filteredActivities.length === 0 ? (
+          <NoResults />
+        ) : (
+          <ActivityGrid activities={filteredActivities} />
+        )}
+      </div>
     </div>
   );
 }
