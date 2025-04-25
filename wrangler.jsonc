@@ -15,6 +15,13 @@
   "observability": {
     "enabled": true,
   },
+  "workers_dev": false,
+  "routes": [
+    {
+      "pattern": "sesculto.acaua.dev",
+      "custom_domain": true,
+    },
+  ],
   "triggers": {
     "crons": ["2 * * * *", "1 * * * 1"],
   },
