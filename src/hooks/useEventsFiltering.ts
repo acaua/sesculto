@@ -1,9 +1,9 @@
 import { useState, useMemo, useCallback } from "react";
 
 import type { FilterOption } from "@/components/FilterBar";
-import type { Activity } from "@/api/activities";
+import type { Event } from "@/api/events";
 import type { BranchesByRegion, Region } from "@/api/branches";
-import { useActivities } from "@/hooks/useActivities";
+import { useEvents } from "@/hooks/useEvents";
 import { useBranches } from "@/hooks/useBranches";
 import { useCategories } from "@/hooks/useCategories";
 import { useFuse } from "@/hooks/useFuse";
@@ -11,9 +11,9 @@ import { useSet, type StatefulSet } from "@/hooks/useSet";
 import { useGroupedFilter, type GroupedFilter } from "@/hooks/useGroupedFilter";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 
-interface useActivitiesFilteringReturn {
-  activities: Activity[] | undefined;
-  filteredActivities: Activity[] | undefined;
+interface useEventsFilteringReturn {
+  events: Event[] | undefined;
+  filteredEvents: Event[] | undefined;
   branchesByRegion: BranchesByRegion | undefined;
   categories: string[] | undefined;
   searchString: string;
@@ -27,8 +27,8 @@ interface useActivitiesFilteringReturn {
   handleAutocompleteSelection: (item: FilterOption) => void;
 }
 
-export function useActivitiesFiltering(): useActivitiesFilteringReturn {
-  const { activities, error: errorActivities } = useActivities();
+export function useEventsFiltering(): useEventsFilteringReturn {
+  const { events, error: errorEvents } = useEvents();
   const { branchesByRegion, error: errorBranches } = useBranches();
   const { categories, error: errorCategories } = useCategories();
 
@@ -39,28 +39,26 @@ export function useActivitiesFiltering(): useActivitiesFilteringReturn {
   const branchesFilter = useGroupedFilter<Region>(branchesByRegion);
   const categoriesFilterSet = useSet<string>();
 
-  const { filteredList: searchedActivities } = useFuse(
-    activities,
+  const { filteredList: searchedEvents } = useFuse(
+    events,
     debouncedSearchString,
     { keys: ["title", "details"] },
   );
 
-  const filteredActivities = useMemo(() => {
-    if (!searchedActivities) return undefined;
+  const filteredEvents = useMemo(() => {
+    if (!searchedEvents) return undefined;
 
-    return searchedActivities.filter((activity) => {
+    return searchedEvents.filter((event) => {
       const matchesBranches =
-        !branchesFilter.hasFilter || branchesFilter.has(activity.branch);
+        !branchesFilter.hasFilter || branchesFilter.has(event.branch);
 
       const matchesCategories =
         categoriesFilterSet.size === 0 ||
-        activity.categories.some((category) =>
-          categoriesFilterSet.has(category),
-        );
+        event.categories.some((category) => categoriesFilterSet.has(category));
 
       return matchesCategories && matchesBranches;
     });
-  }, [searchedActivities, branchesFilter, categoriesFilterSet]);
+  }, [searchedEvents, branchesFilter, categoriesFilterSet]);
 
   const resetFilters = useCallback(() => {
     branchesFilter.clear();
@@ -74,7 +72,7 @@ export function useActivitiesFiltering(): useActivitiesFilteringReturn {
     categoriesFilterSet.size > 0 ||
     searchString.length > 0;
 
-  const error = errorActivities || errorCategories || errorBranches;
+  const error = errorEvents || errorCategories || errorBranches;
 
   const handleAutocompleteSelection = useCallback(
     (item: FilterOption) => {
@@ -92,8 +90,8 @@ export function useActivitiesFiltering(): useActivitiesFilteringReturn {
   );
 
   return {
-    activities,
-    filteredActivities,
+    events,
+    filteredEvents,
     branchesByRegion,
     categories,
     searchString,

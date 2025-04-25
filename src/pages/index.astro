@@ -2,7 +2,7 @@
 import { Loader2 } from "lucide-react";
 
 import Layout from "@/layouts/Layout.astro";
-import { Activities } from "@/components/Activities";
+import { Events } from "@/components/Events";
 ---
 
 <Layout title="Sesculto" description="Busque a programação do SESC SP">
@@ -13,11 +13,11 @@ import { Activities } from "@/components/Activities";
         >Beta</span
       >
     </div>
-    <Activities client:only="react">
+    <Events client:only="react">
       <div slot="fallback" class="flex h-64 items-center justify-center">
         <Loader2 className="text-primary h-8 w-8 animate-spin" />
         <span class="ml-2">Carregando...</span>
       </div>
-    </Activities>
+    </Events>
   </main>
 </Layout>

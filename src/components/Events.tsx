@@ -1,12 +1,12 @@
 import { memo } from "react";
 import { Loader2 } from "lucide-react";
 
-import { ActivityCard } from "@/components/ActivityCard";
+import { EventCard } from "@/components/EventCard";
 import { FilterBar } from "@/components/FilterBar";
-import { useActivitiesFiltering } from "@/hooks/useActivitiesFiltering";
-import type { Activity } from "@/api/activities";
+import { useEventsFiltering } from "@/hooks/useEventsFiltering";
+import type { Event } from "@/api/events";
 
-const ActivitiesCount = memo<{
+const EventsCount = memo<{
   filteredCount: number;
   totalCount: number;
 }>(({ filteredCount, totalCount }) => (
@@ -25,15 +25,15 @@ const NoResults = memo(() => (
   </div>
 ));
 
-const ActivityGrid = memo<{ activities: Activity[] }>(({ activities }) => (
+const EventGrid = memo<{ events: Event[] }>(({ events }) => (
   <div
     className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
     role="list"
     aria-label="Lista de atividades"
   >
-    {activities.map((activity) => (
-      <div key={activity.id} role="listitem">
-        <ActivityCard activity={activity} />
+    {events.map((event) => (
+      <div key={event.id} role="listitem">
+        <EventCard event={event} />
       </div>
     ))}
   </div>
@@ -57,10 +57,10 @@ const ErrorState = () => (
   </div>
 );
 
-export function Activities() {
+export function Events() {
   const {
-    activities,
-    filteredActivities,
+    events,
+    filteredEvents,
     branchesByRegion,
     categories,
     searchString,
@@ -72,13 +72,13 @@ export function Activities() {
     categoriesFilterSet,
     error,
     handleAutocompleteSelection,
-  } = useActivitiesFiltering();
+  } = useEventsFiltering();
 
   if (error) {
     return <ErrorState />;
   }
 
-  if (!activities || !filteredActivities || !categories || !branchesByRegion) {
+  if (!events || !filteredEvents || !categories || !branchesByRegion) {
     return <LoadingState />;
   }
 
@@ -98,15 +98,15 @@ export function Activities() {
       />
 
       <div aria-live="polite">
-        <ActivitiesCount
-          filteredCount={filteredActivities.length}
-          totalCount={activities.length}
+        <EventsCount
+          filteredCount={filteredEvents.length}
+          totalCount={events.length}
         />
 
-        {filteredActivities.length === 0 ? (
+        {filteredEvents.length === 0 ? (
           <NoResults />
         ) : (
-          <ActivityGrid activities={filteredActivities} />
+          <EventGrid events={filteredEvents} />
         )}
       </div>
     </div>

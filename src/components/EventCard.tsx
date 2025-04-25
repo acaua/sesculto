@@ -1,24 +1,22 @@
 import { memo } from "react";
 
-import { IMAGE_DEFAULT_SIZE, type Activity } from "@/api/activities";
+import { IMAGE_DEFAULT_SIZE, type Event } from "@/api/events";
 
-interface ActivityCardProps {
-  activity: Activity;
+interface EventCardProps {
+  event: Event;
 }
 
-export const ActivityCard = memo(function ActivityCard({
-  activity,
-}: ActivityCardProps) {
+export const EventCard = memo(function EventCard({ event }: EventCardProps) {
   return (
     <a
-      href={`https://www.sescsp.org.br${activity.link}`}
+      href={`https://www.sescsp.org.br${event.link}`}
       target="_blank"
       rel="noopener noreferrer"
     >
       <article className="bg-card flex flex-col overflow-hidden rounded-xl border shadow-sm transition-shadow hover:shadow-lg">
         <img
-          src={activity.imageUrl}
-          alt={activity.title}
+          src={event.imageUrl}
+          alt={event.title}
           width={IMAGE_DEFAULT_SIZE.width}
           height={IMAGE_DEFAULT_SIZE.height}
           className="aspect-[2/1] w-full object-cover"
@@ -27,22 +25,22 @@ export const ActivityCard = memo(function ActivityCard({
         <div className="flex h-full flex-col gap-4 p-5 pt-4">
           <div className="flex flex-col gap-1">
             <h1 className="line-clamp-2 h-14 text-lg font-semibold">
-              {activity.title}
+              {event.title}
             </h1>
             <p className="text-muted-foreground line-clamp-2 h-10 text-sm">
-              {activity.details}
+              {event.details}
             </p>
           </div>
           <div className="flex flex-col gap-1">
-            <p className="font-semibold">{activity.branch}</p>
+            <p className="font-semibold">{event.branch}</p>
             <p className="font-mono text-sm">
-              {new Date(activity.firstSessionDate).toLocaleDateString("pt-BR", {
+              {new Date(event.firstSessionDate).toLocaleDateString("pt-BR", {
                 year: "2-digit",
                 month: "2-digit",
                 day: "2-digit",
               })}
-              {activity.firstSessionDate !== activity.lastSessionDate
-                ? ` a ${new Date(activity.lastSessionDate).toLocaleDateString(
+              {event.firstSessionDate !== event.lastSessionDate
+                ? ` a ${new Date(event.lastSessionDate).toLocaleDateString(
                     "pt-BR",
                     { year: "2-digit", month: "2-digit", day: "2-digit" },
                   )}`

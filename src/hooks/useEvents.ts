@@ -1,23 +1,23 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { queryClient } from "@/lib/queryClient";
-import { fetchActivities } from "@/api/activities";
+import { fetchEvents } from "@/api/events";
 
-export function useActivities() {
+export function useEvents() {
   const {
-    data: activities,
+    data: events,
     isLoading,
     error,
   } = useQuery(
     {
-      queryKey: ["activities"],
-      queryFn: fetchActivities,
+      queryKey: ["events"],
+      queryFn: fetchEvents,
     },
     queryClient,
   );
 
   return {
-    activities,
+    events,
     isLoading,
     error,
   };

@@ -1,4 +1,4 @@
-import type { Activity } from "@/api/activities";
+import type { Event } from "@/api/events";
 
 export const fetchCategories = async (): Promise<string[]> => {
   const response = await fetch("https://sescontent.acaua.dev/categories.json");
@@ -12,11 +12,11 @@ export const fetchCategories = async (): Promise<string[]> => {
   return categories;
 };
 
-export function extractUniqueCategories(activities: Activity[]): string[] {
+export function extractUniqueCategories(events: Event[]): string[] {
   const categoriesSet = new Set<string>();
 
-  for (const activity of activities) {
-    for (const category of activity.categories) {
+  for (const event of events) {
+    for (const category of event.categories) {
       categoriesSet.add(category);
     }
   }

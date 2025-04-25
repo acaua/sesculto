@@ -1,6 +1,6 @@
 export const IMAGE_DEFAULT_SIZE = { width: 320, height: 160 };
 
-export interface Activity {
+export interface Event {
   id: number;
   title: string;
   details: string;
@@ -13,14 +13,14 @@ export interface Activity {
   categories: Array<string>;
 }
 
-export const fetchActivities = async (): Promise<Activity[]> => {
-  const response = await fetch("https://sescontent.acaua.dev/activities.json");
+export const fetchEvents = async (): Promise<Event[]> => {
+  const response = await fetch("https://sescontent.acaua.dev/events.json");
 
   if (!response.ok) {
-    throw new Error("Failed to fetch activities");
+    throw new Error("Failed to fetch events");
   }
 
-  const activities: Activity[] = await response.json();
+  const events: Event[] = await response.json();
 
-  return activities;
+  return events;
 };

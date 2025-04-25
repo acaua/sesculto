@@ -1,6 +1,6 @@
 # Sesculto
 
-## Atividades endpoint (activities)
+## Atividades endpoint (events)
 
 https://www.sescsp.org.br/wp-json/wp/v1/atividades/filter?ppp=5000&page=1
 
