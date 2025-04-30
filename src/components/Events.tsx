@@ -1,10 +1,9 @@
 import { memo } from "react";
 import { Loader2 } from "lucide-react";
 
-import { EventCard } from "@/components/EventCard";
+import { EventGrid } from "@/components/EventGrid";
 import { FilterBar } from "@/components/FilterBar";
 import { useEventsFiltering } from "@/hooks/useEventsFiltering";
-import type { Event } from "@/api/events";
 
 const EventsCount = memo<{
   filteredCount: number;
@@ -22,20 +21,6 @@ const NoResults = memo(() => (
     <p className="text-xl text-gray-500">
       Nenhuma atividade encontrada com os filtros selecionados.
     </p>
-  </div>
-));
-
-const EventGrid = memo<{ events: Event[] }>(({ events }) => (
-  <div
-    className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
-    role="list"
-    aria-label="Lista de atividades"
-  >
-    {events.map((event) => (
-      <div key={event.id} role="listitem">
-        <EventCard event={event} />
-      </div>
-    ))}
   </div>
 ));
 
