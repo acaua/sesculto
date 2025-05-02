@@ -1,7 +1,3 @@
-import { X } from "lucide-react";
-
-import { Button } from "@/components/ui/button";
-
 import { SearchBar } from "@/components/filterBar/SearchBar";
 import { CategoriesFilter } from "@/components/filterBar/CategoriesFilter";
 import { BranchesFilter } from "@/components/filterBar/BranchesFilter";
@@ -39,8 +35,6 @@ export function FilterBar({
   searchString,
   setSearchString,
   flushSearchString,
-  hasFilters,
-  resetFilters,
   branchesFilter,
   categoriesFilterSet,
   dateRange,
@@ -48,7 +42,7 @@ export function FilterBar({
   handleAutocompleteSelection,
 }: FilterBarProps) {
   return (
-    <div className="sticky top-0 z-10 mb-6 border-b bg-white py-4 dark:bg-gray-950">
+    <div className="sticky top-0 z-10 mb-5 border-b bg-white py-4 dark:bg-gray-950">
       <div className="flex flex-col gap-3 lg:flex-row">
         {/* Search Bar */}
         <SearchBar
@@ -74,18 +68,6 @@ export function FilterBar({
           <DatePickerWithRange selected={dateRange} onSelect={setDateRange} />
         </div>
       </div>
-      {hasFilters && (
-        <div className="mt-4">
-          <Button
-            variant="ghost"
-            onClick={resetFilters}
-            className="flex items-center"
-          >
-            <X className="mr-2 h-4 w-4" />
-            Limpar
-          </Button>
-        </div>
-      )}
     </div>
   );
 }

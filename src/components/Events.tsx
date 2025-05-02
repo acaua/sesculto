@@ -1,6 +1,7 @@
 import { memo } from "react";
-import { Loader2 } from "lucide-react";
+import { Loader2, X } from "lucide-react";
 
+import { Button } from "@/components/ui/button";
 import { EventGrid } from "@/components/EventGrid";
 import { FilterBar } from "@/components/FilterBar";
 import { useEventsFiltering } from "@/hooks/useEventsFiltering";
@@ -9,7 +10,7 @@ const EventsCount = memo<{
   filteredCount: number;
   totalCount: number;
 }>(({ filteredCount, totalCount }) => (
-  <p className="mb-4 text-gray-500" role="status">
+  <p className="text-gray-500" role="status">
     {filteredCount < totalCount
       ? `${filteredCount} de ${totalCount} atividades encontradas`
       : `${totalCount} atividades encontradas`}
@@ -87,10 +88,18 @@ export function Events() {
       />
 
       <div aria-live="polite">
-        <EventsCount
-          filteredCount={filteredEvents.length}
-          totalCount={events.length}
-        />
+        <div className="mb-5 flex h-9 items-center justify-between gap-4">
+          <EventsCount
+            filteredCount={filteredEvents.length}
+            totalCount={events.length}
+          />
+          {hasFilters && (
+            <Button variant="ghost" onClick={resetFilters}>
+              <X />
+              <span>Limpar</span>
+            </Button>
+          )}
+        </div>
 
         {filteredEvents.length === 0 ? (
           <NoResults />
