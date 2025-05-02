@@ -29,14 +29,18 @@ export function isEventInDateRange(
   event: Event,
   dateRange: DateRange,
 ): boolean {
-  const eventStart = new Date(event.firstSessionDate);
-  const eventEnd = new Date(event.lastSessionDate);
+  function normalizeToDay(date: Date): Date {
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  }
+
+  const eventFirstDate = normalizeToDay(new Date(event.firstSessionDate));
+  const eventLastDate = normalizeToDay(new Date(event.lastSessionDate));
 
   // If range.from is defined and the event ends before the range starts → no overlap
-  if (dateRange.from && eventEnd < dateRange.from) return false;
+  if (dateRange.from && eventLastDate < dateRange.from) return false;
 
   // If dateRange.to is defined and the event starts after the range ends → no overlap
-  if (dateRange.to && eventStart > dateRange.to) return false;
+  if (dateRange.to && eventFirstDate > dateRange.to) return false;
 
   // Otherwise, there's some overlap
   return true;
