@@ -14,7 +14,6 @@ interface SescEvent {
     // Something is wrong with the API and there are records where imagens is incorrectly an empty array
     | [];
   link: string;
-  dataProxSessao: string;
   dataPrimeiraSessao: string;
   dataUltimaSessao: string;
   categorias: Array<{
@@ -62,7 +61,6 @@ export const sescEventToEvent = (sescEvent: SescEvent): Event => {
     details: sescEvent.complemento,
     imageUrl,
     link: sescEvent.link,
-    nextSessionDate: sescEvent.dataProxSessao,
     firstSessionDate: sescEvent.dataPrimeiraSessao,
     lastSessionDate: sescEvent.dataUltimaSessao,
     branch,

@@ -55,6 +55,8 @@ export function Events() {
     resetFilters,
     branchesFilter,
     categoriesFilterSet,
+    dateRange,
+    setDateRange,
     error,
     handleAutocompleteSelection,
   } = useEventsFiltering();
@@ -79,6 +81,8 @@ export function Events() {
         resetFilters={resetFilters}
         branchesFilter={branchesFilter}
         categoriesFilterSet={categoriesFilterSet}
+        dateRange={dateRange}
+        setDateRange={setDateRange}
         handleAutocompleteSelection={handleAutocompleteSelection}
       />
 

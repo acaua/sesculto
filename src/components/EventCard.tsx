@@ -1,6 +1,7 @@
 import { memo } from "react";
 
 import { IMAGE_DEFAULT_SIZE, type Event } from "@/api/events";
+import { formatDate } from "@/lib/utils";
 
 interface EventCardProps {
   event: Event;
@@ -34,16 +35,9 @@ export const EventCard = memo(function EventCard({ event }: EventCardProps) {
           <div className="flex flex-col gap-1">
             <p className="font-semibold">{event.branch}</p>
             <p className="font-mono text-sm">
-              {new Date(event.firstSessionDate).toLocaleDateString("pt-BR", {
-                year: "2-digit",
-                month: "2-digit",
-                day: "2-digit",
-              })}
+              {formatDate(event.firstSessionDate)}
               {event.firstSessionDate !== event.lastSessionDate
-                ? ` a ${new Date(event.lastSessionDate).toLocaleDateString(
-                    "pt-BR",
-                    { year: "2-digit", month: "2-digit", day: "2-digit" },
-                  )}`
+                ? ` a ${formatDate(event.lastSessionDate)}`
                 : ""}
             </p>
           </div>

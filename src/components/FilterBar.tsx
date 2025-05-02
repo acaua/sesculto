@@ -5,6 +5,10 @@ import { Button } from "@/components/ui/button";
 import { SearchBar } from "@/components/filterBar/SearchBar";
 import { CategoriesFilter } from "@/components/filterBar/CategoriesFilter";
 import { BranchesFilter } from "@/components/filterBar/BranchesFilter";
+import {
+  DatePickerWithRange,
+  type DateRange,
+} from "@/components/DatePickerWithRange";
 import type { StatefulSet } from "@/hooks/useSet";
 import type { GroupedFilter } from "@/hooks/useGroupedFilter";
 import type { BranchesByRegion, Region } from "@/api/branches";
@@ -24,6 +28,8 @@ interface FilterBarProps {
   resetFilters: () => void;
   branchesFilter: GroupedFilter<Region>;
   categoriesFilterSet: StatefulSet<string>;
+  dateRange: DateRange | undefined;
+  setDateRange: (range: DateRange | undefined) => void;
   handleAutocompleteSelection: (item: FilterOption) => void;
 }
 
@@ -37,11 +43,13 @@ export function FilterBar({
   resetFilters,
   branchesFilter,
   categoriesFilterSet,
+  dateRange,
+  setDateRange,
   handleAutocompleteSelection,
 }: FilterBarProps) {
   return (
     <div className="sticky top-0 z-10 mb-6 border-b bg-white py-4 dark:bg-gray-950">
-      <div className="flex flex-col gap-3 md:flex-row">
+      <div className="flex flex-col gap-3 lg:flex-row">
         {/* Search Bar */}
         <SearchBar
           searchString={searchString}
@@ -63,6 +71,7 @@ export function FilterBar({
             branchesByRegion={branchesByRegion}
             branchesFilter={branchesFilter}
           />
+          <DatePickerWithRange selected={dateRange} onSelect={setDateRange} />
         </div>
       </div>
       {hasFilters && (
