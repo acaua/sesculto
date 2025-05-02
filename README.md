@@ -14,6 +14,7 @@ Sesculto is a modern web application that provides an enhanced browsing experien
 - 🔍 **Search Events**: Easily search for events by title and description
 - 🏢 **Filter by Branch**: Filter events by SESC branches, grouped by region (capital, interior, litoral)
 - 🏷️ **Filter by Category**: Find events by their cultural category
+- 📅 **Filter by Date**: Select a date range to find events happening during a specific period
 - ⌨️ **Keyboard Shortcuts**: Use Cmd+K / Ctrl+K to quickly access search
 - 🔄 **Infinite Scrolling**: Browse events with smooth infinite scrolling
 - 📱 **Responsive Design**: Works across all device sizes
