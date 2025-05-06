@@ -18,6 +18,15 @@ interface DatePickerWithRangeProps {
   className?: string;
 }
 
+function dateDisplay(selected: DateRange | undefined) {
+  if (!selected?.from) return "Escolha as datas";
+
+  if (selected.to)
+    return `${formatDate(selected.from)} - ${formatDate(selected.to)}`;
+
+  return `${formatDate(selected.from)} - `;
+}
+
 export function DatePickerWithRange({
   selected,
   onSelect,
@@ -37,21 +46,14 @@ export function DatePickerWithRange({
           >
             <CalendarIcon />
             <span className="sr-only sm:not-sr-only">
-              {selected?.from ? (
-                selected.to ? (
-                  <>
-                    {formatDate(selected.from)} - {formatDate(selected.to)}
-                  </>
-                ) : (
-                  formatDate(selected.from)
-                )
-              ) : (
-                <span>Escolha as datas</span>
-              )}
+              {dateDisplay(selected)}
             </span>
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">
+          <div className="px-4 pt-4 pb-2 font-normal text-gray-500 sm:hidden">
+            {dateDisplay(selected)}
+          </div>
           <Calendar
             initialFocus
             mode="range"
