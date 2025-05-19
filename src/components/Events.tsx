@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useDeferredValue } from "react";
 import { Loader2, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -62,6 +62,8 @@ export function Events() {
     handleAutocompleteSelection,
   } = useEventsFiltering();
 
+  const deferredFilteredEvents = useDeferredValue(filteredEvents);
+
   if (error) {
     return <ErrorState />;
   }
@@ -104,7 +106,7 @@ export function Events() {
         {filteredEvents.length === 0 ? (
           <NoResults />
         ) : (
-          <EventGrid events={filteredEvents} />
+          <EventGrid events={deferredFilteredEvents ?? []} />
         )}
       </div>
     </div>
