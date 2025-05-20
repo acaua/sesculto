@@ -38,7 +38,7 @@ export const sescBranchesByRegionToBranchesByRegion = (
   const branchesByRegion = Object.fromEntries(
     REGIONS.map((region) => [
       region,
-      branchesByRegionSesc[region].map(sescBranchToBranch),
+      branchesByRegionSesc[region].map(sescBranchToBranch).sort(),
     ]),
   ) as BranchesByRegion;
 
